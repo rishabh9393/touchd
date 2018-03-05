@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+    <!-- Top Sliding Banners -->
+
+    <RelativeLayout
+        android:id="@+id/image_viewer"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true" />
+
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:padding="10dip"
+            app:centered="true"
+            app:fillColor="#ff0099"
+            app:pageColor="#FF0000"
+            app:snap="false" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fb_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="@color/com_facebook_button_background_color_disabled"
+        android:padding="10dp">
+
+        <!--<com.facebook.login.widget.LoginButton-->
+        <!--android:id="@+id/login_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginLeft="40dp"-->
+        <!--android:layout_marginRight="40dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:visibility="gone"-->
+        <!--/>-->
+        <ImageView
+            android:id="@+id/imv_fb_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+
+            android:layout_marginTop="-10dp"
+            app:srcCompat="@drawable/fb_login_icon" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@id/imv_fb_icon"
+
+
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:text="@string/fb_login_conditions"
+            android:textAlignment="center" />
+    </RelativeLayout>
+
+</LinearLayout>

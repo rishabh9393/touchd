@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Touched</string>
+
+    <string name="facebook_app_id">1656417237776896</string>
+    <string name="fb_login_protocol_scheme">fb1656417237776896</string>
+    <string name="fb_login_conditions">We like to keep only verified profiles through Facebook, if you do not have one, Sign up on Facebook first and we are waiting for you here</string>
+    <string name="explore">Explore</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="message">Message</string>
+    <string name="profile">Profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

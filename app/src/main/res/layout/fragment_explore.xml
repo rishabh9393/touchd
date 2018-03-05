@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="app.touched.com.touched.Fragments.ExploreFragment">
+<RelativeLayout
+    android:id="@+id/filterLayout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+    <TextView
+        android:drawableLeft="@drawable/filter"
+        android:drawableRight="@drawable/arrow_dropdown"
+        android:id="@+id/txvFilter"
+        android:gravity="center_vertical"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+
+        android:text="TextView" />
+</RelativeLayout>
+   <android.support.v7.widget.RecyclerView
+       android:id="@+id/recycleView"
+       android:layout_below="@id/filterLayout"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+   </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
