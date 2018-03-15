@@ -3,11 +3,7 @@ package app.touched.com.touched.Models;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import app.touched.com.touched.Utilities.TimeUtils;
 
 /**
  * Created by Anshul on 2/23/2018.
@@ -15,18 +11,6 @@ import app.touched.com.touched.Utilities.TimeUtils;
 @IgnoreExtraProperties
 public class User_Details implements Serializable {
 
-
-    public String getAge() {
-        return age;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
 
     public static class School {
         private String id, name;
@@ -79,6 +63,24 @@ public class User_Details implements Serializable {
 
     public static class Location {
         private String id, name;
+        private String Latitude;
+        private String Longitude;
+
+        public String getLatitude() {
+            return Latitude;
+        }
+
+        public void setLatitude(String latitude) {
+            Latitude = latitude;
+        }
+
+        public String getLongitude() {
+            return Longitude;
+        }
+
+        public void setLongitude(String longitude) {
+            Longitude = longitude;
+        }
 
         public String getId() {
             return id;
@@ -180,23 +182,63 @@ public class User_Details implements Serializable {
     private String about;
     private String address;
     private String birthday;
-    private String interested_in;
+    private List<String> interested_in;
     private String id;
     private String age;
-    private String rating;
-
-    public String getPoints() {
-        return points;
-    }
-
-    public void setPoints(String points) {
-        this.points = points;
-    }
-
-    private String points;
+    private String ranking;
+    private Integer points;
     private List<Education> education;
     private Location location;
     private Picture picture;
+    private Work work;
+    private String no_gifts;
+    private String no_refunds;
+    private String balance;
+
+    public String getNo_gifts() {
+        return no_gifts;
+    }
+
+    public void setNo_gifts(String no_gifts) {
+        this.no_gifts = no_gifts;
+    }
+
+    public String getNo_refunds() {
+        return no_refunds;
+    }
+
+    public void setNo_refunds(String no_refunds) {
+        this.no_refunds = no_refunds;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public String getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(String ranking) {
+        this.ranking = ranking;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
 
     public Work getWork() {
         return work;
@@ -205,9 +247,6 @@ public class User_Details implements Serializable {
     public void setWork(Work work) {
         this.work = work;
     }
-
-    private Work work;
-
 
 
     public void setAge(String dob) {
@@ -317,12 +356,11 @@ public class User_Details implements Serializable {
     }
 
 
-
-    public String getInterested_in() {
+    public List<String> getInterested_in() {
         return interested_in;
     }
 
-    public void setInterested_in(String interested_in) {
+    public void setInterested_in(List<String> interested_in) {
         this.interested_in = interested_in;
     }
 

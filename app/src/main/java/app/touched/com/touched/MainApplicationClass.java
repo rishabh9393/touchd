@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.Utilities.Constants;
 
 /**
@@ -21,6 +22,15 @@ public class MainApplicationClass extends Application {
     private FirebaseAuth mAuth;
     private AccessToken accessToken;
     private FirebaseUser myDetails;
+    private User_Details profileUsersDetail;
+
+    public User_Details getProfileUsersDetail() {
+        return profileUsersDetail;
+    }
+
+    public void setProfileUsersDetail(User_Details profileUsersDetail) {
+        this.profileUsersDetail = profileUsersDetail;
+    }
 
     public FirebaseUser getMyDetails() {
         return myDetails;

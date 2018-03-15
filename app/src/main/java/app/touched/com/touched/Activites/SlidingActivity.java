@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -60,6 +61,7 @@ import app.touched.com.touched.Models.Users;
 import app.touched.com.touched.R;
 import app.touched.com.touched.Utilities.Constants;
 import app.touched.com.touched.Utilities.DialogsUtils;
+import app.touched.com.touched.Utilities.LocationManagerUtility;
 import app.touched.com.touched.Utilities.TimeUtils;
 
 import static app.touched.com.touched.Utilities.Utility.tryGetValueFromString;
@@ -77,16 +79,46 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
     //String user_id;
     AccessToken accessToken;
     private DatabaseReference mDatabaseUsersDetails, mDatabaseUsers, mDatabase;
-
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private AccessTokenTracker mFacebookAccessTokenTracker;
+    LocationManagerUtility locationManagerUtility;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mCallbackManager = CallbackManager.Factory.create();
+       locationManagerUtility = new LocationManagerUtility(SlidingActivity.this);
+           mCallbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.slider_layout);
         mAuth = ((MainApplicationClass) this.getApplication()).getmAuth();
-
+        mFacebookAccessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                handleFacebookAccessToken(currentAccessToken);
+            }
+        };
+//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//
+//            }
+//        };
+//        mAuth.addAuthStateListener(mAuthStateListener);
         init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locationManagerUtility.startUsingGPS();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // if user logged in with Facebook, stop tracking their token
+        if (mFacebookAccessTokenTracker != null) {
+            mFacebookAccessTokenTracker.stopTracking();
+        }
     }
 
     private void init() {
@@ -209,6 +241,7 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("", "handleFacebookAccessToken:" + token);
         // [START_EXCLUDE silent]
@@ -261,13 +294,19 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
                             // Application code
                             // user_id = object.getString("id");
                             User_Details user_details = new Gson().fromJson(object.toString(), User_Details.class);
-                            String dob = tryGetValueFromString("birthday",object);
+                            String dob = tryGetValueFromString("birthday", object);
                             if (dob != null) {
 
                                 String[] splitDate = dob.split("/");
                                 String age = TimeUtils.getAge(Integer.parseInt(splitDate[2]), Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[0]));
                                 user_details.setAge(age);
+                            } else {
+                                user_details.setAge("18");
                             }
+                            user_details.setNo_gifts("0");
+                            user_details.setNo_refunds("0");
+                            user_details.setPoints(0);
+
                             uploadUserDetailsToDB(user_details, user);
 
                             // 01/31/1980 format
@@ -287,7 +326,9 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         Users users = new Users(user_details.getUser_id(), user_details.getEmail(), TimeUtils.getCurrentDateTime(), "true", TimeUtils.getCurrentDateTime());
-
+        users.setMsg_count("0");
+        users.setGifts_counts("0");
+        users.setRefund_amount("0");
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + Constants.USERS_Details_NODE + "/" + firebaseUser.getUid(), user_details);
@@ -297,6 +338,8 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
         Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
         Log.e("access token", accessToken.getUserId());
         Log.e("user id", user_details.getUser_id());
+
+        ((MainApplicationClass) getApplication()).setProfileUsersDetail(user_details);
         DialogsUtils.hideProgressDialog();
         startActivity(new Intent(SlidingActivity.this, MainActivity.class));
         finish();

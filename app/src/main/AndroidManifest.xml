@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="app.touched.com.touched">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -49,13 +51,6 @@
         <activity android:name=".Activites.MainActivity" />
         <activity android:name=".HomePage" />
         <activity android:name=".Activites.SplashScreen">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-        <activity android:name=".Activites.Main2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

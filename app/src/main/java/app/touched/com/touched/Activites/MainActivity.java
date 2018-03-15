@@ -232,32 +232,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-                menuItem.setChecked(true);
+//                menuItem.setChecked(true);
 
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_item_1:
-                        Snackbar.make(mContentFrame, "Item One",
-                                Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 0;
-                        menuItem.setChecked(true);
-                        // Set action bar title
-                        setTitle(menuItem.getTitle());
-                        // Close the navigation drawer
-                        mDrawerLayout.closeDrawers();
+//                switch (menuItem.getItemId()) {
+//                    case R.id.navigation_item_1:
+//                        Snackbar.make(mContentFrame, "Item One",
+//                                Snackbar.LENGTH_SHORT).show();
+//                        mCurrentSelectedPosition = 0;
+//                        menuItem.setChecked(true);
+//                        // Set action bar title
+//                        setTitle(menuItem.getTitle());
+//                        // Close the navigation drawer
+//                        mDrawerLayout.closeDrawers();
+//                        return true;
+//                    case R.id.navigation_item_2:
+//                        Snackbar.make(mContentFrame, "Item Two",
+//                                Snackbar.LENGTH_SHORT).show();
+//                        mCurrentSelectedPosition = 1;
+//                        menuItem.setChecked(true);
+//                        // Set action bar title
+//                        setTitle(menuItem.getTitle());
+//                        // Close the navigation drawer
+//                        mDrawerLayout.closeDrawers();
+//                        return true;
+//                    default:
                         return true;
-                    case R.id.navigation_item_2:
-                        Snackbar.make(mContentFrame, "Item Two",
-                                Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 1;
-                        menuItem.setChecked(true);
-                        // Set action bar title
-                        setTitle(menuItem.getTitle());
-                        // Close the navigation drawer
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    default:
-                        return true;
-                }
+//                }
             }
         });
 
@@ -280,10 +280,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.navigation_item_1:
-                return true;
-        }
+//        switch (item.getItemId()) {
+//            case R.id.navigation_item_1:
+//                return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 

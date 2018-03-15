@@ -2,6 +2,7 @@ package app.touched.com.touched.Activites;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -10,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import app.touched.com.touched.Models.Users;
 import app.touched.com.touched.Utilities.Constants;
+import app.touched.com.touched.Utilities.PermissionUtility;
 import app.touched.com.touched.Utilities.TimeUtils;
 
 import static app.touched.com.touched.Utilities.Constants.USER_LAST_ONLINE_TIME_NODE;
@@ -28,7 +30,11 @@ public class BaseActivity extends AppCompatActivity {
         dbUsers = FirebaseDatabase.getInstance().getReference().child(Constants.USERS_NODE);
 
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtility.with(this).onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
     @Override
     protected void onResume() {
         super.onResume();

@@ -53,9 +53,9 @@ public class Users_Adapter extends RecyclerView.Adapter<Users_Adapter.Users_View
 
         Picasso.with(activity).load(photoUrl).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(holder.userImage);
         holder.userName.setText(user_details.getFirst_name() + " " + user_details.getLast_name());
-        String rating=user_details.getRating();
+        String rating=user_details.getRanking();
         if(rating!=null)
-        holder.userRating.setText(user_details.getRating().isEmpty() ? "0" : user_details.getRating());
+        holder.userRating.setText(user_details.getRanking().isEmpty() ? "0" : user_details.getRanking());
         else holder.userRating.setText("0");
         String age=user_details.getAge();
         if(age!=null)
