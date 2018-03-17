@@ -25,6 +25,8 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -32,12 +34,12 @@ import app.touched.com.touched.Adapter.DemoViewPagerAdapter;
 import app.touched.com.touched.Fragments.DemoFragment;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.R;
+import app.touched.com.touched.Utilities.Constants;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
-    FirebaseUser myBasicDetails;
-    FirebaseAuth mAuth;
+
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
@@ -61,9 +63,7 @@ public class MainActivity extends AppCompatActivity {
 //        setTheme(enabledTranslucentNavigation ? R.style.AppTheme_TranslucentNavigation : R.style.AppTheme);
 
         setContentView(R.layout.activity_main);
-        mAuth = ((MainApplicationClass) this.getApplication()).getmAuth();
-        myBasicDetails = ((MainApplicationClass) this.getApplication()).getMyDetails();
-        Toast.makeText(this, "welcome " + myBasicDetails.getDisplayName(), Toast.LENGTH_SHORT).show();
+       //  Toast.makeText(this, "welcome " + myBasicDetails.getDisplayName(), Toast.LENGTH_SHORT).show();
 
       //  setUpToolbar();
 

@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -55,6 +58,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import app.touched.com.touched.Adapter.SlidingImage_Adapter;
+import app.touched.com.touched.Fragments.SliderImagesFragment;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.Models.Users;
@@ -67,26 +71,23 @@ import app.touched.com.touched.Utilities.TimeUtils;
 import static app.touched.com.touched.Utilities.Utility.tryGetValueFromString;
 
 public class SlidingActivity extends BaseActivity implements View.OnClickListener {
-    private static ViewPager mPager;
-    private static int currentPage = 0;
-    private static int NUM_PAGES = 0;
-    private static final Integer[] IMAGES = {R.drawable.one, R.drawable.two, R.drawable.three};
-    private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
+
     private ImageView fbImageButton;
     CallbackManager mCallbackManager;
-    LoginButton loginButton;
+
     FirebaseAuth mAuth;
-    //String user_id;
+
     AccessToken accessToken;
     private DatabaseReference mDatabaseUsersDetails, mDatabaseUsers, mDatabase;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private AccessTokenTracker mFacebookAccessTokenTracker;
     LocationManagerUtility locationManagerUtility;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       locationManagerUtility = new LocationManagerUtility(SlidingActivity.this);
-           mCallbackManager = CallbackManager.Factory.create();
+        locationManagerUtility = new LocationManagerUtility(SlidingActivity.this);
+        mCallbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.slider_layout);
         mAuth = ((MainApplicationClass) this.getApplication()).getmAuth();
         mFacebookAccessTokenTracker = new AccessTokenTracker() {
@@ -95,15 +96,17 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
                 handleFacebookAccessToken(currentAccessToken);
             }
         };
-//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-//
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//
-//            }
-//        };
-//        mAuth.addAuthStateListener(mAuthStateListener);
+        addFragment();
         init();
+    }
+
+    private void addFragment() {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =
+                fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.frame_container, new SliderImagesFragment());
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -122,65 +125,7 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void init() {
-        //Collections.addAll(ImagesArray,IMAGES);
-        for (int i = 0; i < IMAGES.length; i++)
-            ImagesArray.add(IMAGES[i]);
 
-        mPager = (ViewPager) findViewById(R.id.pager);
-
-
-        mPager.setAdapter(new SlidingImage_Adapter(SlidingActivity.this, ImagesArray));
-
-
-        CirclePageIndicator indicator = (CirclePageIndicator)
-                findViewById(R.id.indicator);
-
-        indicator.setViewPager(mPager);
-
-        final float density = getResources().getDisplayMetrics().density;
-
-//Set circle indicator radius
-        indicator.setRadius(5 * density);
-
-        NUM_PAGES = IMAGES.length;
-
-        // Auto start of viewpager
-        final Handler handler = new Handler();
-        final Runnable Update = new Runnable() {
-            public void run() {
-                if (currentPage == NUM_PAGES) {
-                    currentPage = 0;
-                }
-                mPager.setCurrentItem(currentPage++, true);
-            }
-        };
-        Timer swipeTimer = new Timer();
-        swipeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(Update);
-            }
-        }, 3000, 3000);
-
-        // Pager listener over indicator
-        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                currentPage = position;
-
-            }
-
-            @Override
-            public void onPageScrolled(int pos, float arg1, int arg2) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int pos) {
-
-            }
-        });
 
         fbImageButton = (ImageView) findViewById(R.id.imv_fb_icon);
 
@@ -329,6 +274,7 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
         users.setMsg_count("0");
         users.setGifts_counts("0");
         users.setRefund_amount("0");
+        users.setIs_login("true");
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + Constants.USERS_Details_NODE + "/" + firebaseUser.getUid(), user_details);

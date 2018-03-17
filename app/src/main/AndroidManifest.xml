@@ -50,7 +50,9 @@
         </activity>
         <activity android:name=".Activites.MainActivity" />
         <activity android:name=".HomePage" />
-        <activity android:name=".Activites.SplashScreen">
+        <activity
+            android:name=".Activites.SplashScreen"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

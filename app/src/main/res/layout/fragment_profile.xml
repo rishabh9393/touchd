@@ -18,10 +18,14 @@
             android:background="@android:color/white"
             android:orientation="vertical">
 
-            <ImageView
+            <FrameLayout
+                android:id="@+id/frame_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/com_facebook_profile_picture_blank_square" />
+                android:layout_height="250dp"/>
+            <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/com_facebook_profile_picture_blank_square" />-->
 
             <TextView
                 android:id="@+id/txvUserName"
@@ -85,8 +89,7 @@
                 android:layout_height="1px"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/darker_gray"
-                android:orientation="vertical"/>
-
+                android:orientation="vertical" />
 
 
             <LinearLayout
@@ -95,7 +98,8 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -146,7 +150,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/txvRiseTop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center"
@@ -160,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@android:color/darker_gray"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -237,21 +241,22 @@
 
                 <TextView
                     android:id="@+id/txvAboutUsHeading"
-                    android:layout_toRightOf="@id/imvAboutUs"
-                    android:layout_centerInParent="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@id/imvAboutUs"
                     android:text="About Me"
                     android:textSize="16sp" />
+
                 <ImageView
                     android:id="@+id/imvAboutUsEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_centerInParent="true"
                     android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="5dp"
                     android:src="@drawable/edit" />
             </RelativeLayout>
 
@@ -259,16 +264,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@android:color/darker_gray"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <EditText
                 android:id="@+id/txvAboutUs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@null"
-                android:maxLength="300"
                 android:layout_margin="10dp"
+                android:background="@null"
+                android:clickable="false"
+                android:focusable="false"
+                android:maxLength="300"
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
 
         </LinearLayout>
