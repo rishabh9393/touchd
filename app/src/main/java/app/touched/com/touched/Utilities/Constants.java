@@ -19,6 +19,7 @@ public class Constants {
     public static final String LEADERBOARD_FRAGMENT="leaderboardFragment";
     public static final String MESSAGE_FRAGMENT="messageFragment";
     public static final String FACEBOOK_URL="https://graph.facebook.com/";
+    public static final String SPLASH_SCREEN_NODE="splasScreen";
 
 
 

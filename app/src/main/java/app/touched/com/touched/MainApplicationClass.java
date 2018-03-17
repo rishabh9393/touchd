@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.Utilities.Constants;
@@ -23,6 +25,24 @@ public class MainApplicationClass extends Application {
     private AccessToken accessToken;
     private FirebaseUser myDetails;
     private User_Details profileUsersDetail;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+
+    public StorageReference getStorageRef() {
+        return storageRef;
+    }
+
+    public void setStorageRef(StorageReference storageRef) {
+        this.storageRef = storageRef;
+    }
+
+    public FirebaseStorage getStorage() {
+        return storage;
+    }
+
+    public void setStorage(FirebaseStorage storage) {
+        this.storage = storage;
+    }
 
     public User_Details getProfileUsersDetail() {
         return profileUsersDetail;
@@ -60,10 +80,10 @@ public class MainApplicationClass extends Application {
     public void onCreate() {
         super.onCreate();
         FirebaseApp.initializeApp(this);
-
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
-
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
     }
 
 

@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -68,13 +69,14 @@ import app.touched.com.touched.Utilities.DialogsUtils;
 import app.touched.com.touched.Utilities.LocationManagerUtility;
 import app.touched.com.touched.Utilities.TimeUtils;
 
+import static app.touched.com.touched.Utilities.Constants.SPLASH_SCREEN_NODE;
 import static app.touched.com.touched.Utilities.Utility.tryGetValueFromString;
 
-public class SlidingActivity extends BaseActivity implements View.OnClickListener {
+public class SlidingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView fbImageButton;
     CallbackManager mCallbackManager;
-
+    StorageReference splashScreenStorage;
     FirebaseAuth mAuth;
 
     AccessToken accessToken;
@@ -90,6 +92,7 @@ public class SlidingActivity extends BaseActivity implements View.OnClickListene
         mCallbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.slider_layout);
         mAuth = ((MainApplicationClass) this.getApplication()).getmAuth();
+        splashScreenStorage = ((MainApplicationClass) this.getApplication()).getStorageRef().child(SPLASH_SCREEN_NODE);
         mFacebookAccessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {

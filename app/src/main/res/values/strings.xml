@@ -13,5 +13,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="location_not_found">please enter your location in profile section</string>
     <string name="education_not_found">please enter your education in profile section</string>
+    <string name="about_us">Enter something interesting about yourself :)</string>
 
 </resources>

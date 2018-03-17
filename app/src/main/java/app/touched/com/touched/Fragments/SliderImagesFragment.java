@@ -2,6 +2,7 @@ package app.touched.com.touched.Fragments;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import app.touched.com.touched.Activites.SlidingActivity;
 import app.touched.com.touched.Adapter.SlidingImage_Adapter;
@@ -57,7 +60,22 @@ public class SliderImagesFragment extends Fragment {
         indicator.setRadius(5 * density);
 
         NUM_PAGES = IMAGES.length;
-
+//        final Handler handler = new Handler();
+//        final Runnable Update = new Runnable() {
+//            public void run() {
+//                if (currentPage == NUM_PAGES) {
+//                    currentPage = 0;
+//                }
+//                mPager.setCurrentItem(currentPage++, true);
+//            }
+//        };
+//        Timer swipeTimer = new Timer();
+//        swipeTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                handler.post(Update);
+//            }
+//        }, 3000, 3000);
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
