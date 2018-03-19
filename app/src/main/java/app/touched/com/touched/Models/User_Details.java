@@ -3,6 +3,7 @@ package app.touched.com.touched.Models;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,82 @@ import java.util.List;
 @IgnoreExtraProperties
 public class User_Details implements Serializable {
 
+    public static class Fb_Photos {
+        private Fb_Photos_Details data;
+
+        public Fb_Photos_Details getData() {
+            return data;
+        }
+
+        public void setData(Fb_Photos_Details data) {
+            this.data = data;
+        }
+    }
+
+    public static class Fb_Photo_Images {
+        private String height, source, width;
+
+        public String getHeight() {
+            return height;
+        }
+
+        public void setHeight(String height) {
+            this.height = height;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getWidth() {
+            return width;
+        }
+
+        public void setWidth(String width) {
+            this.width = width;
+        }
+    }
+
+    public static class Fb_Photos_Details {
+        private String id, picture, updated_time;
+        private ArrayList<Fb_Photo_Images> images;
+
+        public ArrayList<Fb_Photo_Images> getImages() {
+            return images;
+        }
+
+        public void setImages(ArrayList<Fb_Photo_Images> images) {
+            this.images = images;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getPicture() {
+            return picture;
+        }
+
+        public void setPicture(String picture) {
+            this.picture = picture;
+        }
+
+        public String getUpdated_time() {
+            return updated_time;
+        }
+
+        public void setUpdated_time(String updated_time) {
+            this.updated_time = updated_time;
+        }
+    }
 
     public static class School {
         private String id, name;
@@ -194,6 +271,15 @@ public class User_Details implements Serializable {
     private String no_gifts;
     private String no_refunds;
     private String balance;
+    private Fb_Photos photos;
+
+    public Fb_Photos getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(Fb_Photos photos) {
+        this.photos = photos;
+    }
 
     public String getNo_gifts() {
         return no_gifts;

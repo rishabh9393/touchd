@@ -27,6 +27,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -42,11 +43,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.StringReader;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,7 +143,8 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d("", "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
 
-//photos{album,from,icon,id,updated_time,images,link,name,height}
+// photos{album,from,icon,id,updated_time,images,link,name,height}
+// interested_in,birthday,favorite_athletes,favorite_teams,inspirational_people,sports
             }
 
             @Override
@@ -254,8 +258,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
                             user_details.setNo_gifts("0");
                             user_details.setNo_refunds("0");
                             user_details.setPoints(0);
-
-                            uploadUserDetailsToDB(user_details, user);
+                            getPhotosFromTheFb(user_details, user);
 
                             // 01/31/1980 format
                         }
@@ -270,8 +273,32 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
 //        startActivity(in);
     }
 
+    private void getPhotosFromTheFb(final User_Details user_details, final FirebaseUser user) {
+        new GraphRequest(
+                accessToken,
+                "/" + user_details.getUser_id() + "/photos",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        Gson gson = new Gson();
+                        JsonReader reader = new JsonReader(new StringReader(response.toString()));
+                        reader.setLenient(true);
+                        User_Details only_photos = gson.fromJson(reader, User_Details.class);
+
+                       // User_Details only_photos = new Gson().fromJson(response.toString(), User_Details.class);
+                        user_details.setPhotos(only_photos.getPhotos());
+                        uploadUserDetailsToDB(user_details, user);
+
+                    }
+                }
+        ).executeAsync();
+    }
+
     private void uploadUserDetailsToDB(User_Details user_details, FirebaseUser firebaseUser) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        Log.e("access token", accessToken.getUserId());
+        Log.e("user id", user_details.getUser_id());
 
         Users users = new Users(user_details.getUser_id(), user_details.getEmail(), TimeUtils.getCurrentDateTime(), "true", TimeUtils.getCurrentDateTime());
         users.setMsg_count("0");
@@ -285,8 +312,6 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
 
         mDatabase.updateChildren(childUpdates);
         Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
-        Log.e("access token", accessToken.getUserId());
-        Log.e("user id", user_details.getUser_id());
 
         ((MainApplicationClass) getApplication()).setProfileUsersDetail(user_details);
         DialogsUtils.hideProgressDialog();

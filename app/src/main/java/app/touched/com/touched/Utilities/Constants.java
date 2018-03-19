@@ -20,6 +20,10 @@ public class Constants {
     public static final String MESSAGE_FRAGMENT="messageFragment";
     public static final String FACEBOOK_URL="https://graph.facebook.com/";
     public static final String SPLASH_SCREEN_NODE="splasScreen";
+    public static final String IS_OTHER="isOtherUser";
+    public static final String MALE="male";
+    public static final String FEMALE="female";
+
 
 
 

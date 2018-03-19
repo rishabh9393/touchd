@@ -1,6 +1,7 @@
 package app.touched.com.touched.Adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,12 +15,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.touched.com.touched.Activites.ProfileActivity;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
 
 import static app.touched.com.touched.Utilities.Constants.EXPLORE_FRAGMENT;
 import static app.touched.com.touched.Utilities.Constants.FACEBOOK_URL;
 import static app.touched.com.touched.Utilities.Constants.LEADERBOARD_FRAGMENT;
+import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
 
 /**
  * Created by Anshul on 2/26/2018.
@@ -177,6 +180,13 @@ return viewHolder;
             userAge = (TextView) view.findViewById(R.id.txvUserAge);
             userRating = (TextView) view.findViewById(R.id.txvUserRating);
             userImage = (ImageView) view.findViewById(R.id.imvUserPic);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent data=new Intent(view.getContext(), ProfileActivity.class);
+                    data.putExtra(USERS_Details_NODE,user_details);
+                }
+            });
         }
     }
     public class Loading_ViewHolder extends RecyclerView.ViewHolder{
