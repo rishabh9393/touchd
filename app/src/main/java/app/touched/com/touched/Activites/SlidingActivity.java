@@ -282,11 +282,11 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
                         Gson gson = new Gson();
-                        JsonReader reader = new JsonReader(new StringReader(response.toString()));
-                        reader.setLenient(true);
-                        User_Details only_photos = gson.fromJson(reader, User_Details.class);
-
-                       // User_Details only_photos = new Gson().fromJson(response.toString(), User_Details.class);
+//                        JsonReader reader = new JsonReader(new StringReader(response.toString()));
+//                        reader.setLenient(true);
+                        User_Details only_photos = gson.fromJson(response.getJSONObject().toString(), User_Details.class);
+// when we get photos from fb then try to save directly on own storage so that we can use it latter
+                        // User_Details only_photos = new Gson().fromJson(response.toString(), User_Details.class);
                         user_details.setPhotos(only_photos.getPhotos());
                         uploadUserDetailsToDB(user_details, user);
 

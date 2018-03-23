@@ -22,11 +22,12 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        data = (User_Details) getIntent().getSerializableExtra(USERS_Details_NODE);
         addFragment();
     }
 
     private void addFragment() {
+        data = (User_Details) getIntent().getExtras().getParcelable(USERS_Details_NODE);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
@@ -36,8 +37,9 @@ public class ProfileActivity extends AppCompatActivity {
             bundle.putString(IS_OTHER, MALE);
         else
             bundle.putString(IS_OTHER, FEMALE);
+        bundle.putParcelable(USERS_Details_NODE, data);
         othersProfile.setArguments(bundle);
-        fragmentTransaction.add(R.id.frame_container, othersProfile);
+        fragmentTransaction.add(R.id.frame_container_act, othersProfile);
         fragmentTransaction.commit();
     }
 }

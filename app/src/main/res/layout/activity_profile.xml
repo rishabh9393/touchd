@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="app.touched.com.touched.Activites.ProfileActivity">
     <FrameLayout
-        android:id="@+id/frame_container"
+        android:id="@+id/frame_container_act"
         android:layout_width="match_parent"
-        android:layout_height="250dp" />
+        android:layout_height="wrap_content" />
 </RelativeLayout>

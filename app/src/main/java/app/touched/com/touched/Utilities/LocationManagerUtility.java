@@ -49,6 +49,7 @@ public class LocationManagerUtility implements LocationListener {
                 }
             }).validate(Manifest.permission.ACCESS_FINE_LOCATION);
         } else {
+            //show the dialog for the setting
             Intent callSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             con.startActivity(callSetting);
         }

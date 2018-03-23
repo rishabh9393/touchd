@@ -37,8 +37,8 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int ITEM = 0;
     private static final int LOADING = 1;
     private boolean isLoadingAdded = false;
-
-    public Users_Adapter(Activity context,  String pageType) {
+public int position;
+    public Users_Adapter(Activity context, String pageType) {
         this.user_details = new ArrayList<>();
         activity = context;
         this.pageType = pageType;
@@ -60,7 +60,7 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
                 View itemView = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
 
-                viewHolder= new Users_ViewHolder(itemView);
+                viewHolder = new Users_ViewHolder(itemView);
                 break;
 
             case LOADING:
@@ -69,18 +69,18 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 break;
 
 
-
         }
-return viewHolder;
+        return viewHolder;
 
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         User_Details user_details = this.user_details.get(position);
+        this.position=holder.getAdapterPosition();
         switch (getItemViewType(position)) {
             case ITEM:
-                Users_ViewHolder viewHolder=(Users_ViewHolder) holder;
+                Users_ViewHolder viewHolder = (Users_ViewHolder) holder;
                 String photoUrl = FACEBOOK_URL + user_details.getUser_id() + "/picture?height=500";
 
                 Picasso.with(activity).load(photoUrl).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
@@ -101,7 +101,7 @@ return viewHolder;
 
     @Override
     public int getItemCount() {
-        return user_details.size();
+        return user_details == null ? 0 : user_details.size();
     }
 
     public ArrayList<User_Details> getUser_details() {
@@ -139,9 +139,7 @@ return viewHolder;
 
     public void clear() {
         isLoadingAdded = false;
-        while (getItemCount() > 0) {
-            remove(getItem(0));
-        }
+        user_details.clear();
     }
 
     public boolean isEmpty() {
@@ -183,13 +181,17 @@ return viewHolder;
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent data=new Intent(view.getContext(), ProfileActivity.class);
-                    data.putExtra(USERS_Details_NODE,user_details);
+                    Intent data = new Intent(view.getContext(), ProfileActivity.class);
+                    data.putExtra(USERS_Details_NODE, user_details.get(getAdapterPosition()));
+                    view.getContext().startActivity(data);
                 }
             });
         }
+
+
     }
-    public class Loading_ViewHolder extends RecyclerView.ViewHolder{
+
+    public class Loading_ViewHolder extends RecyclerView.ViewHolder {
 
         public Loading_ViewHolder(View itemView) {
             super(itemView);

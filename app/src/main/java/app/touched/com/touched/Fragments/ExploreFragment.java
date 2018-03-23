@@ -8,13 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -27,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import app.touched.com.touched.Adapter.SpinnerAdapter;
 import app.touched.com.touched.Adapter.Users_Adapter;
@@ -35,10 +32,7 @@ import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
 import app.touched.com.touched.Utilities.Constants;
-import app.touched.com.touched.Utilities.PaginationScrollListener;
 
-import static android.R.layout.browser_link_context_header;
-import static android.R.layout.simple_spinner_item;
 import static app.touched.com.touched.Utilities.Constants.EXPLORE_FRAGMENT;
 import static app.touched.com.touched.Utilities.Constants.IS_LOGIN_NODE;
 import static app.touched.com.touched.Utilities.Constants.MSG_COUNT_NODE;
@@ -49,14 +43,19 @@ import static app.touched.com.touched.Utilities.Constants.MSG_COUNT_NODE;
 public class ExploreFragment extends Fragment {
     ProgressBar progressBar;
     private boolean isLoading = false;
+    private boolean isLastPage = false;
+    private static final int PAGE_START = 0;
+    private long totalData = 0;
 
     private Users_Adapter mAdapter;
-   // private ArrayList<User_Details> user_details = new ArrayList<>();
+    ;
+
+    // private ArrayList<User_Details> user_details = new ArrayList<>();
     User_Details myDetails = new User_Details();
     private FirebaseAuth mAuth;
     private DatabaseReference dbToCollectExploreData, dbToCollectUserNormalData;
     private ArrayList<String> filteredData = new ArrayList<>();
-    GridLayoutManager mLayoutManager=new GridLayoutManager(getContext(),2);
+    GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
     String filterValue, lastKey;
 
     public ExploreFragment() {
@@ -92,12 +91,23 @@ public class ExploreFragment extends Fragment {
         mAuth = ((MainApplicationClass) getActivity().getApplication()).getmAuth();
         dbToCollectUserNormalData = FirebaseDatabase.getInstance().getReference().child(Constants.USERS_NODE);
         dbToCollectExploreData = FirebaseDatabase.getInstance().getReference().child(Constants.USERS_Details_NODE);
-         mLayoutManager = new GridLayoutManager(view.getContext(), 2);
+        mLayoutManager = new GridLayoutManager(view.getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new Users_Adapter(getActivity(), EXPLORE_FRAGMENT);
+
         recyclerView.setAdapter(mAdapter);
-        recyclerView.addOnScrollListener(paginationScrollListener);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (mLayoutManager.findLastVisibleItemPosition() == totalData - 1 && !isLastPage) {
+                    isLoading = true;
+
+                    getDataFromServer();
+                }
+            }
+        });
 
         SpinnerAdapter dataAdapter = new SpinnerAdapter(view.getContext(), filteredData);
         spinner.setAdapter(dataAdapter);
@@ -110,12 +120,14 @@ public class ExploreFragment extends Fragment {
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             filterValue = filteredData.get(i);
             dbToCollectExploreData.removeEventListener(userDetailsListner);
+            isLoading = true;
 
             switch (filterValue) {
                 case "Currently Online":
                     dbToCollectUserNormalData.orderByChild(IS_LOGIN_NODE).equalTo("true").limitToFirst(50).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            totalData = dataSnapshot.getChildrenCount();
                             for (DataSnapshot value : dataSnapshot.getChildren()) {
                                 lastKey = value.getKey();
                                 dbToCollectExploreData.child(lastKey).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -133,6 +145,10 @@ public class ExploreFragment extends Fragment {
                                     }
                                 });
                             }
+                            isLoading = false;
+                            if (dataSnapshot.getChildrenCount() < 50)
+                                isLastPage = true;
+
                         }
 
                         @Override
@@ -182,40 +198,39 @@ public class ExploreFragment extends Fragment {
     private ValueEventListener userDetailsListner = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            totalData += dataSnapshot.getChildrenCount();
+            mAdapter.removeLoadingFooter();
+            isLoading = false;
             for (DataSnapshot value : dataSnapshot.getChildren()) {
                 lastKey = value.getKey();
                 User_Details exploreUsersDetail = value.getValue(User_Details.class);
                 mAdapter.add(exploreUsersDetail);
             }
-           // mAdapter.notifyDataSetChanged();
+
+            if (dataSnapshot.getChildrenCount() < 50)
+                isLastPage = true;
+            // mAdapter.notifyDataSetChanged();
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
         }
     };
-    private PaginationScrollListener paginationScrollListener = new PaginationScrollListener(mLayoutManager) {
-        @Override
-        protected void loadMoreItems() {
-            isLoading = true;
 
-            getDataFromServer();
-
-        }
-
-
-        @Override
-        public boolean isLoading() {
-            return isLoading;
-        }
-    };
 
     public void getDataFromServer() {
+        //   dbToCollectExploreData.removeEventListener(userDetailsListner);
+        //  dbToCollectUserNormalData.removeEventListener(userDetailsListner);
+        mAdapter.addLoadingFooter();
         switch (filterValue) {
             case "Currently Online":
-                dbToCollectUserNormalData.orderByChild(IS_LOGIN_NODE).equalTo("true").startAt(lastKey).limitToFirst(50).addValueEventListener(new ValueEventListener() {
+                dbToCollectUserNormalData.orderByKey().limitToFirst(50).startAt(lastKey).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        totalData += dataSnapshot.getChildrenCount();
+                        mAdapter.removeLoadingFooter();
+                        isLoading = false;
+
                         for (DataSnapshot value : dataSnapshot.getChildren()) {
                             lastKey = value.getKey();
 
@@ -234,6 +249,9 @@ public class ExploreFragment extends Fragment {
                                 }
                             });
                         }
+                        if (dataSnapshot.getChildrenCount() < 50)
+                            isLastPage = true;
+
                     }
 
                     @Override

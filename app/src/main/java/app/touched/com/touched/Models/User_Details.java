@@ -1,5 +1,8 @@
 package app.touched.com.touched.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
@@ -10,9 +13,10 @@ import java.util.List;
  * Created by Anshul on 2/23/2018.
  */
 @IgnoreExtraProperties
-public class User_Details implements Serializable {
+public class User_Details implements Parcelable {
 
-    public static class Fb_Photos {
+    public static class Fb_Photos implements Parcelable {
+
         private Fb_Photos_Details data;
 
         public Fb_Photos_Details getData() {
@@ -22,9 +26,39 @@ public class User_Details implements Serializable {
         public void setData(Fb_Photos_Details data) {
             this.data = data;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.data, flags);
+        }
+
+        public Fb_Photos() {
+        }
+
+        protected Fb_Photos(Parcel in) {
+            this.data = in.readParcelable(Fb_Photos_Details.class.getClassLoader());
+        }
+
+        public static final Creator<Fb_Photos> CREATOR = new Creator<Fb_Photos>() {
+            @Override
+            public Fb_Photos createFromParcel(Parcel source) {
+                return new Fb_Photos(source);
+            }
+
+            @Override
+            public Fb_Photos[] newArray(int size) {
+                return new Fb_Photos[size];
+            }
+        };
     }
 
-    public static class Fb_Photo_Images {
+    public static class Fb_Photo_Images implements Parcelable {
+
         private String height, source, width;
 
         public String getHeight() {
@@ -50,9 +84,43 @@ public class User_Details implements Serializable {
         public void setWidth(String width) {
             this.width = width;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.height);
+            dest.writeString(this.source);
+            dest.writeString(this.width);
+        }
+
+        public Fb_Photo_Images() {
+        }
+
+        protected Fb_Photo_Images(Parcel in) {
+            this.height = in.readString();
+            this.source = in.readString();
+            this.width = in.readString();
+        }
+
+        public static final Creator<Fb_Photo_Images> CREATOR = new Creator<Fb_Photo_Images>() {
+            @Override
+            public Fb_Photo_Images createFromParcel(Parcel source) {
+                return new Fb_Photo_Images(source);
+            }
+
+            @Override
+            public Fb_Photo_Images[] newArray(int size) {
+                return new Fb_Photo_Images[size];
+            }
+        };
     }
 
-    public static class Fb_Photos_Details {
+    public static class Fb_Photos_Details implements Parcelable {
+
         private String id, picture, updated_time;
         private ArrayList<Fb_Photo_Images> images;
 
@@ -87,9 +155,45 @@ public class User_Details implements Serializable {
         public void setUpdated_time(String updated_time) {
             this.updated_time = updated_time;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.id);
+            dest.writeString(this.picture);
+            dest.writeString(this.updated_time);
+            dest.writeTypedList(this.images);
+        }
+
+        public Fb_Photos_Details() {
+        }
+
+        protected Fb_Photos_Details(Parcel in) {
+            this.id = in.readString();
+            this.picture = in.readString();
+            this.updated_time = in.readString();
+            this.images = in.createTypedArrayList(Fb_Photo_Images.CREATOR);
+        }
+
+        public static final Creator<Fb_Photos_Details> CREATOR = new Creator<Fb_Photos_Details>() {
+            @Override
+            public Fb_Photos_Details createFromParcel(Parcel source) {
+                return new Fb_Photos_Details(source);
+            }
+
+            @Override
+            public Fb_Photos_Details[] newArray(int size) {
+                return new Fb_Photos_Details[size];
+            }
+        };
     }
 
-    public static class School {
+    public static class School implements Parcelable {
+
         private String id, name;
 
         public String getId() {
@@ -107,9 +211,41 @@ public class User_Details implements Serializable {
         public void setName(String name) {
             this.name = name;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.id);
+            dest.writeString(this.name);
+        }
+
+        public School() {
+        }
+
+        protected School(Parcel in) {
+            this.id = in.readString();
+            this.name = in.readString();
+        }
+
+        public static final Creator<School> CREATOR = new Creator<School>() {
+            @Override
+            public School createFromParcel(Parcel source) {
+                return new School(source);
+            }
+
+            @Override
+            public School[] newArray(int size) {
+                return new School[size];
+            }
+        };
     }
 
-    public static class Education {
+    public static class Education implements Parcelable {
+
         private String id, type;
         private School school;
 
@@ -136,9 +272,43 @@ public class User_Details implements Serializable {
         public void setSchool(School school) {
             this.school = school;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.id);
+            dest.writeString(this.type);
+            dest.writeParcelable(this.school, flags);
+        }
+
+        public Education() {
+        }
+
+        protected Education(Parcel in) {
+            this.id = in.readString();
+            this.type = in.readString();
+            this.school = in.readParcelable(School.class.getClassLoader());
+        }
+
+        public static final Creator<Education> CREATOR = new Creator<Education>() {
+            @Override
+            public Education createFromParcel(Parcel source) {
+                return new Education(source);
+            }
+
+            @Override
+            public Education[] newArray(int size) {
+                return new Education[size];
+            }
+        };
     }
 
-    public static class Location {
+    public static class Location implements Parcelable {
+
         private String id, name;
         private String Latitude;
         private String Longitude;
@@ -174,9 +344,45 @@ public class User_Details implements Serializable {
         public void setName(String name) {
             this.name = name;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.id);
+            dest.writeString(this.name);
+            dest.writeString(this.Latitude);
+            dest.writeString(this.Longitude);
+        }
+
+        public Location() {
+        }
+
+        protected Location(Parcel in) {
+            this.id = in.readString();
+            this.name = in.readString();
+            this.Latitude = in.readString();
+            this.Longitude = in.readString();
+        }
+
+        public static final Creator<Location> CREATOR = new Creator<Location>() {
+            @Override
+            public Location createFromParcel(Parcel source) {
+                return new Location(source);
+            }
+
+            @Override
+            public Location[] newArray(int size) {
+                return new Location[size];
+            }
+        };
     }
 
-    public static class Picture {
+    public static class Picture implements Parcelable {
+
         private Picture_Data data;
 
         public Picture_Data getData() {
@@ -186,9 +392,39 @@ public class User_Details implements Serializable {
         public void setData(Picture_Data data) {
             this.data = data;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.data, flags);
+        }
+
+        public Picture() {
+        }
+
+        protected Picture(Parcel in) {
+            this.data = in.readParcelable(Picture_Data.class.getClassLoader());
+        }
+
+        public static final Creator<Picture> CREATOR = new Creator<Picture>() {
+            @Override
+            public Picture createFromParcel(Parcel source) {
+                return new Picture(source);
+            }
+
+            @Override
+            public Picture[] newArray(int size) {
+                return new Picture[size];
+            }
+        };
     }
 
-    public static class Picture_Data {
+    public static class Picture_Data implements Parcelable {
+
         private String url, height, width;
 
         public String getUrl() {
@@ -214,9 +450,43 @@ public class User_Details implements Serializable {
         public void setWidth(String width) {
             this.width = width;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.url);
+            dest.writeString(this.height);
+            dest.writeString(this.width);
+        }
+
+        public Picture_Data() {
+        }
+
+        protected Picture_Data(Parcel in) {
+            this.url = in.readString();
+            this.height = in.readString();
+            this.width = in.readString();
+        }
+
+        public static final Creator<Picture_Data> CREATOR = new Creator<Picture_Data>() {
+            @Override
+            public Picture_Data createFromParcel(Parcel source) {
+                return new Picture_Data(source);
+            }
+
+            @Override
+            public Picture_Data[] newArray(int size) {
+                return new Picture_Data[size];
+            }
+        };
     }
 
-    public static class Work {
+    public static class Work implements Parcelable {
+
         private String id, description, employer, location;
 
         public String getId() {
@@ -250,6 +520,41 @@ public class User_Details implements Serializable {
         public void setLocation(String location) {
             this.location = location;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.id);
+            dest.writeString(this.description);
+            dest.writeString(this.employer);
+            dest.writeString(this.location);
+        }
+
+        public Work() {
+        }
+
+        protected Work(Parcel in) {
+            this.id = in.readString();
+            this.description = in.readString();
+            this.employer = in.readString();
+            this.location = in.readString();
+        }
+
+        public static final Creator<Work> CREATOR = new Creator<Work>() {
+            @Override
+            public Work createFromParcel(Parcel source) {
+                return new Work(source);
+            }
+
+            @Override
+            public Work[] newArray(int size) {
+                return new Work[size];
+            }
+        };
     }
 
     private String email;
@@ -450,4 +755,68 @@ public class User_Details implements Serializable {
         this.interested_in = interested_in;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.email);
+        dest.writeString(this.first_name);
+        dest.writeString(this.gender);
+        dest.writeString(this.last_name);
+        dest.writeString(this.about);
+        dest.writeString(this.address);
+        dest.writeString(this.birthday);
+        dest.writeStringList(this.interested_in);
+        dest.writeString(this.id);
+        dest.writeString(this.age);
+        dest.writeString(this.ranking);
+        dest.writeValue(this.points);
+        dest.writeList(this.education);
+        dest.writeParcelable(this.location, flags);
+        dest.writeParcelable(this.picture, flags);
+        dest.writeParcelable(this.work, flags);
+        dest.writeString(this.no_gifts);
+        dest.writeString(this.no_refunds);
+        dest.writeString(this.balance);
+        dest.writeParcelable(this.photos, flags);
+    }
+
+    protected User_Details(Parcel in) {
+        this.email = in.readString();
+        this.first_name = in.readString();
+        this.gender = in.readString();
+        this.last_name = in.readString();
+        this.about = in.readString();
+        this.address = in.readString();
+        this.birthday = in.readString();
+        this.interested_in = in.createStringArrayList();
+        this.id = in.readString();
+        this.age = in.readString();
+        this.ranking = in.readString();
+        this.points = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.education = new ArrayList<Education>();
+        in.readList(this.education, Education.class.getClassLoader());
+        this.location = in.readParcelable(Location.class.getClassLoader());
+        this.picture = in.readParcelable(Picture.class.getClassLoader());
+        this.work = in.readParcelable(Work.class.getClassLoader());
+        this.no_gifts = in.readString();
+        this.no_refunds = in.readString();
+        this.balance = in.readString();
+        this.photos = in.readParcelable(Fb_Photos.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<User_Details> CREATOR = new Parcelable.Creator<User_Details>() {
+        @Override
+        public User_Details createFromParcel(Parcel source) {
+            return new User_Details(source);
+        }
+
+        @Override
+        public User_Details[] newArray(int size) {
+            return new User_Details[size];
+        }
+    };
 }

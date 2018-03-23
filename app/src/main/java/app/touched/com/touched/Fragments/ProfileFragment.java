@@ -34,6 +34,7 @@ import static app.touched.com.touched.Utilities.Constants.EXPLORE_FRAGMENT;
 import static app.touched.com.touched.Utilities.Constants.FEMALE;
 import static app.touched.com.touched.Utilities.Constants.IS_OTHER;
 import static app.touched.com.touched.Utilities.Constants.MALE;
+import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +49,7 @@ public class ProfileFragment extends Fragment {
     RecyclerView recyclerViewInterests, recyclerViewPhotos;
     String OtherProfile;
     LinearLayout femaleLayout, maleLayout;
+    Bundle data;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -58,9 +60,9 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Bundle data=getArguments();
-        if(data!=null) {
-            OtherProfile = getArguments().getString(IS_OTHER, null);
+        data = getArguments();
+        if (data != null) {
+            OtherProfile = data.getString(IS_OTHER, null);
         }
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         femaleLayout = (LinearLayout) v.findViewById(R.id.llyFemaleType);
@@ -101,9 +103,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        myBasicDetails = ((MainApplicationClass) getActivity().getApplication()).getMyDetails();
-        mAuth = ((MainApplicationClass) getActivity().getApplication()).getmAuth();
-        profileUsersDetail = ((MainApplicationClass) getActivity().getApplication()).getProfileUsersDetail();
+        if (OtherProfile == null) {
+            myBasicDetails = ((MainApplicationClass) getActivity().getApplication()).getMyDetails();
+            mAuth = ((MainApplicationClass) getActivity().getApplication()).getmAuth();
+            profileUsersDetail = ((MainApplicationClass) getActivity().getApplication()).getProfileUsersDetail();
+        } else {
+            profileUsersDetail =data.getParcelable(USERS_Details_NODE);
+        }
         myName.setText(profileUsersDetail.getFirst_name() + " " + profileUsersDetail.getLast_name());
         myAge.setText(profileUsersDetail.getAge());
         myLocation.setText(profileUsersDetail.getLocation() != null ? profileUsersDetail.getLocation().getName() : "");
