@@ -26,6 +26,16 @@ public class LocationManagerUtility implements LocationListener {
     private String Latitude, Longitude;
     PermissionUtility contextPassing;
 
+    public String getLatitude() {
+        return Latitude;
+    }
+
+    public String getLongitude() {
+        return Longitude;
+    }
+
+
+
     public LocationManagerUtility(Activity context) {
         con = context;
         contextPassing= new PermissionUtility(con);
@@ -65,6 +75,8 @@ public class LocationManagerUtility implements LocationListener {
     public void onLocationChanged(Location location) {
         Latitude = String.valueOf(location.getLatitude());
         Longitude = String.valueOf(location.getLongitude());
+
+        startUsingGPS();
     }
 
     @Override

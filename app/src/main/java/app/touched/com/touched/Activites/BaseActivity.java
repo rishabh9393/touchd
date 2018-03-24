@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.touched.com.touched.MainApplicationClass;
+import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.Models.Users;
 import app.touched.com.touched.Utilities.Constants;
 import app.touched.com.touched.Utilities.PermissionUtility;
@@ -54,12 +55,12 @@ public class BaseActivity extends AppCompatActivity {
         mAuth = ((MainApplicationClass) getApplication()).getmAuth();
         myBasicDetails = ((MainApplicationClass) getApplication()).getMyDetails();
 
-        dbUsers = FirebaseDatabase.getInstance().getReference().child(Constants.USERS_NODE).child(myBasicDetails.getUid());
+        dbUsers = FirebaseDatabase.getInstance().getReference();
 
-        Users users = new Users();
+        User_Details users = new User_Details();
         users.setIs_login("true");
         Map<String, Object> childUpdate = new HashMap<>();
-        childUpdate.put(IS_LOGIN_NODE, users.getIs_login());
+        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + myBasicDetails.getUid()+"/"+IS_LOGIN_NODE,users.getIs_login());
 
         dbUsers.updateChildren(childUpdate);
     }
@@ -67,11 +68,14 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Users users = new Users();
+        User_Details users = new User_Details();
         users.setIs_login("false");
-        users.setLast_online_time(TimeUtils.getCurrentDateTime());
+        Users us = new Users();
+        us.setLast_online_time(TimeUtils.getCurrentDateTime());
         Map<String, Object> childUpdate = new HashMap<>();
-        childUpdate.put(LAST_ONLINE_TIME_NODE, users.getLast_login_time());
+
+        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + myBasicDetails.getUid()+"/"+IS_LOGIN_NODE, users.getIs_login());
+        childUpdate.put("/" + Constants.USERS_NODE + "/" + myBasicDetails.getUid()+"/"+LAST_ONLINE_TIME_NODE, us.getLast_login_time());
         dbUsers.updateChildren(childUpdate);
     }
 }

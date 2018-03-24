@@ -9,9 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.internal.util.Predicate;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import app.touched.com.touched.Activites.ProfileActivity;
@@ -36,7 +41,8 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int ITEM = 0;
     private static final int LOADING = 1;
     private boolean isLoadingAdded = false;
-public int position;
+    public int position;
+
     public Users_Adapter(Activity context, String pageType) {
         this.user_details = new ArrayList<>();
         activity = context;
@@ -76,7 +82,7 @@ public int position;
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         User_Details user_details = this.user_details.get(position);
-        this.position=holder.getAdapterPosition();
+        this.position = holder.getAdapterPosition();
         switch (getItemViewType(position)) {
             case ITEM:
                 Users_ViewHolder viewHolder = (Users_ViewHolder) holder;
@@ -121,6 +127,7 @@ public int position;
     }
 
     public void addAll(List<User_Details> dataList) {
+
         for (User_Details data : dataList) {
             add(data);
         }
@@ -136,7 +143,8 @@ public int position;
 
     public void clear() {
         isLoadingAdded = false;
-        user_details.clear();
+        user_details=new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     public boolean isEmpty() {
@@ -158,6 +166,56 @@ public int position;
         if (item != null) {
             user_details.remove(position);
             notifyItemRemoved(position);
+        }
+    }
+
+    public void filterByOnline(ArrayList<User_Details> list) {
+        if (user_details.size() > 0)
+            clear();
+
+
+        ArrayList<User_Details> filerlist = new ArrayList<>();
+        for (User_Details data : list) {
+            if (data.getIs_login().equals("true")) {
+                filerlist.add(data);
+
+            }
+        }
+        addAll(filerlist);
+
+    }
+
+    public void filterByNewUser(ArrayList<User_Details> list) {
+        ArrayList<User_Details> filerlist = new ArrayList<>();
+
+        for (User_Details data : list) {
+            if (Integer.parseInt(data.getMsg_count()) <= 2)
+                filerlist.add(data);
+
+        }
+
+    addAll(filerlist);
+    }
+
+    public void filterByWork(ArrayList<User_Details> list, String myWork) {
+        ArrayList<User_Details> filerlist = new ArrayList<>();
+
+        for (User_Details data : list) {
+            if (data.getWork().getDescription().equals(myWork))
+                filerlist.add(data);
+
+        }
+
+    addAll(filerlist);
+    }
+
+    public void filterByEducation(ArrayList<User_Details> list, String myEdu) {
+        ArrayList<User_Details> filerlist = new ArrayList<>();
+
+        for (User_Details data : list) {
+            if (data.getEducation().get(0).getSchool().getName().equals(myEdu))
+                filerlist.add(data);
+
         }
     }
 

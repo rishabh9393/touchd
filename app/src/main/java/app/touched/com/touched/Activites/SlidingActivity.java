@@ -240,6 +240,14 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
                             user_details.setNo_gifts("0");
                             user_details.setNo_refunds("0");
                             user_details.setPoints(0);
+                            if (user_details.getLocation() != null) {
+                                user_details.getLocation().setLatitude(locationManagerUtility.getLatitude());
+                                user_details.getLocation().setLongitude(locationManagerUtility.getLongitude());
+                            } else {
+                                User_Details.Location location = new User_Details.Location();
+                                location.setLongitude(locationManagerUtility.getLongitude());
+                                location.setLatitude(locationManagerUtility.getLatitude());
+                            }
                             getPhotosFromTheFb(user_details, user);
 
                             // 01/31/1980 format
@@ -283,11 +291,11 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         Log.e("user id", user_details.getUser_id());
 
         Users users = new Users(user_details.getUser_id(), user_details.getEmail(), TimeUtils.getCurrentDateTime(), "true", TimeUtils.getCurrentDateTime());
-        users.setMsg_count("0");
+
         users.setGifts_counts("0");
         users.setRefund_amount("0");
-        users.setIs_login("true");
-
+        user_details.setIs_login("true");
+        user_details.setMsg_count("0");
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + Constants.USERS_Details_NODE + "/" + firebaseUser.getUid(), user_details);
         childUpdates.put("/" + Constants.USERS_NODE + "/" + firebaseUser.getUid(), users);

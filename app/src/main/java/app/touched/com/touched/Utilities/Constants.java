@@ -23,6 +23,7 @@ public class Constants {
     public static final String IS_OTHER="isOtherUser";
     public static final String MALE="male";
     public static final String FEMALE="female";
+    public static final String LOCATION_NAME="location/name";
 
 
 

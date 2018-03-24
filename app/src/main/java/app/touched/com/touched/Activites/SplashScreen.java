@@ -43,8 +43,6 @@ public class SplashScreen extends AppCompatActivity {
             dbToCollectExploreData.addValueEventListener(userDetailListner);
 
 
-
-
         } else {
             new Handler().postDelayed(new Runnable() {
 
@@ -81,9 +79,16 @@ public class SplashScreen extends AppCompatActivity {
 
         }
 
+
         @Override
         public void onCancelled(DatabaseError databaseError) {
 
         }
     };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dbToCollectExploreData.removeEventListener(userDetailListner);
+    }
 }

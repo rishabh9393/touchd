@@ -555,7 +555,7 @@ public class User_Details implements Parcelable {
             }
         };
     }
-
+    private String is_login;
     private String email;
     private String first_name;
     private String gender;
@@ -576,6 +576,14 @@ public class User_Details implements Parcelable {
     private String no_refunds;
     private String balance;
     private Fb_Photos photos;
+    private String msg_count;
+    public String getMsg_count() {
+        return msg_count;
+    }
+
+    public void setMsg_count(String msg_count) {
+        this.msg_count = msg_count;
+    }
 
     public Fb_Photos getPhotos() {
         return photos;
@@ -720,7 +728,13 @@ public class User_Details implements Parcelable {
         this.last_name = last_name;
     }
 
+    public String getIs_login() {
+        return is_login;
+    }
 
+    public void setIs_login(String is_login) {
+        this.is_login = is_login;
+    }
     public String getAbout() {
         return about;
     }
@@ -761,6 +775,7 @@ public class User_Details implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.is_login);
         dest.writeString(this.email);
         dest.writeString(this.first_name);
         dest.writeString(this.gender);
@@ -773,7 +788,7 @@ public class User_Details implements Parcelable {
         dest.writeInt(this.age);
         dest.writeString(this.ranking);
         dest.writeValue(this.points);
-        dest.writeList(this.education);
+        dest.writeTypedList(this.education);
         dest.writeParcelable(this.location, flags);
         dest.writeParcelable(this.picture, flags);
         dest.writeParcelable(this.work, flags);
@@ -781,9 +796,11 @@ public class User_Details implements Parcelable {
         dest.writeString(this.no_refunds);
         dest.writeString(this.balance);
         dest.writeParcelable(this.photos, flags);
+        dest.writeString(this.msg_count);
     }
 
     protected User_Details(Parcel in) {
+        this.is_login = in.readString();
         this.email = in.readString();
         this.first_name = in.readString();
         this.gender = in.readString();
@@ -796,8 +813,7 @@ public class User_Details implements Parcelable {
         this.age = in.readInt();
         this.ranking = in.readString();
         this.points = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.education = new ArrayList<Education>();
-        in.readList(this.education, Education.class.getClassLoader());
+        this.education = in.createTypedArrayList(Education.CREATOR);
         this.location = in.readParcelable(Location.class.getClassLoader());
         this.picture = in.readParcelable(Picture.class.getClassLoader());
         this.work = in.readParcelable(Work.class.getClassLoader());
@@ -805,9 +821,10 @@ public class User_Details implements Parcelable {
         this.no_refunds = in.readString();
         this.balance = in.readString();
         this.photos = in.readParcelable(Fb_Photos.class.getClassLoader());
+        this.msg_count = in.readString();
     }
 
-    public static final Parcelable.Creator<User_Details> CREATOR = new Parcelable.Creator<User_Details>() {
+    public static final Creator<User_Details> CREATOR = new Creator<User_Details>() {
         @Override
         public User_Details createFromParcel(Parcel source) {
             return new User_Details(source);
