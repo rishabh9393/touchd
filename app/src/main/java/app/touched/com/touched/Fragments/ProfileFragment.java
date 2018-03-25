@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,7 +38,7 @@ import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
     User_Details profileUsersDetail;
     FirebaseAuth mAuth;
     FirebaseUser myBasicDetails;
@@ -48,6 +49,7 @@ public class ProfileFragment extends Fragment {
     String OtherProfile;
     LinearLayout femaleLayout, maleLayout;
     Bundle data;
+    ImageView imvMaleMsg, imvFemaleMsg, imvMalePoke, imvFemalePoke;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -74,6 +76,14 @@ public class ProfileFragment extends Fragment {
         myCityRanking = (TextView) v.findViewById(R.id.txvCityRanking);
         myOverRanking = (TextView) v.findViewById(R.id.txvOverallRanking);
         myStatus = (EditText) v.findViewById(R.id.txvAboutUs);
+        imvFemaleMsg = (ImageView) v.findViewById(R.id.imvFemaleMsg);
+        imvFemalePoke = (ImageView) v.findViewById(R.id.imvFemalePoke);
+        imvMaleMsg = (ImageView) v.findViewById(R.id.imvMaleMsg);
+        imvMalePoke = (ImageView) v.findViewById(R.id.imvMalePoke);
+        imvMalePoke.setOnClickListener(this);
+        imvMaleMsg.setOnClickListener(this);
+        imvFemalePoke.setOnClickListener(this);
+        imvFemaleMsg.setOnClickListener(this);
         if (OtherProfile != null) {
             if (OtherProfile.equals(MALE)) {
                 maleLayout.setVisibility(View.VISIBLE);
@@ -106,7 +116,7 @@ public class ProfileFragment extends Fragment {
             mAuth = ((MainApplicationClass) getActivity().getApplication()).getmAuth();
             profileUsersDetail = ((MainApplicationClass) getActivity().getApplication()).getProfileUsersDetail();
         } else {
-            profileUsersDetail =data.getParcelable(USERS_Details_NODE);
+            profileUsersDetail = data.getParcelable(USERS_Details_NODE);
         }
         myName.setText(profileUsersDetail.getFirst_name() + " " + profileUsersDetail.getLast_name());
         myAge.setText(String.valueOf(profileUsersDetail.getAge()));
@@ -133,5 +143,20 @@ public class ProfileFragment extends Fragment {
         ProfileFragment profileFragment = new ProfileFragment();
         return profileFragment;
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.imvMaleMsg:
+                break;
+            case R.id.imvMalePoke:
+                break;
+            case R.id.imvFemaleMsg:
+                break;
+            case R.id.imvFemalePoke:
+                break;
+        }
     }
 }
