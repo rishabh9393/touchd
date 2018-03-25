@@ -1,7 +1,6 @@
 package app.touched.com.touched.Adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,30 +13,22 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.touched.com.touched.Activites.ProfileActivity;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
 
-import static app.touched.com.touched.Utilities.Constants.EXPLORE_FRAGMENT;
-import static app.touched.com.touched.Utilities.Constants.FACEBOOK_URL;
-import static app.touched.com.touched.Utilities.Constants.LEADERBOARD_FRAGMENT;
-import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
-
 /**
- * Created by Anshul on 2/26/2018.
+ * Created by AnshulMajoka on 18-Mar-18.
  */
 
-public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-
-    private ArrayList<User_Details> user_details;
+public class LeaderboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Activity activity;
+    private ArrayList<User_Details> user_details;
     private String pageType;
     private static final int ITEM = 0;
     private static final int LOADING = 1;
     private boolean isLoadingAdded = false;
-public int position;
-    public Users_Adapter(Activity context, String pageType) {
+
+    public LeaderboardAdapter(Activity context, String pageType) {
         this.user_details = new ArrayList<>();
         activity = context;
         this.pageType = pageType;
@@ -51,44 +42,36 @@ public int position;
 
         switch (viewType) {
             case ITEM:
-
-                if (pageType.equals(EXPLORE_FRAGMENT)) {
-                    resource = R.layout.explore_item_layout;
-                } else if (pageType.equals(LEADERBOARD_FRAGMENT)) {
-                    resource = R.layout.explore_item_layout;
-                }
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
-
-                viewHolder = new Users_ViewHolder(itemView);
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.leader_board_item, parent, false);
+                viewHolder = new LeaderboardAdapter.Users_ViewHolder(itemView);
                 break;
 
             case LOADING:
                 View v2 = inflater.inflate(R.layout.progress_bar, parent, false);
-                viewHolder = new Loading_ViewHolder(v2);
+                viewHolder = new LeaderboardAdapter.Loading_ViewHolder(v2);
                 break;
 
 
         }
         return viewHolder;
 
-    }
+    }//ZEnk2hpGfrivgGJOoiObfeiSFIY=
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         User_Details user_details = this.user_details.get(position);
-        this.position=holder.getAdapterPosition();
         switch (getItemViewType(position)) {
             case ITEM:
-                Users_ViewHolder viewHolder = (Users_ViewHolder) holder;
-                String photoUrl = FACEBOOK_URL + user_details.getUser_id() + "/picture?height=500";
-
-                Picasso.with(activity).load(photoUrl).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
+                LeaderboardAdapter.Users_ViewHolder viewHolder = (LeaderboardAdapter.Users_ViewHolder) holder;
+               Picasso.with(activity).load(user_details.getPicture().getData().getUrl()).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
                 viewHolder.userName.setText(user_details.getFirst_name() + " " + user_details.getLast_name());
                 String rating = user_details.getRanking();
                 if (rating != null)
                     viewHolder.userRating.setText(user_details.getRanking().isEmpty() ? "0" : user_details.getRanking());
                 else viewHolder.userRating.setText("0");
-                    viewHolder.userAge.setText(String.valueOf(user_details.getAge()));
+                User_Details.Location location = user_details.getLocation();
+                if (location != null)
+                    viewHolder.location.setText(location.getName());
                 break;
             case LOADING:
                 break;
@@ -98,7 +81,7 @@ public int position;
 
     @Override
     public int getItemCount() {
-        return user_details == null ? 0 : user_details.size();
+        return user_details.size();
     }
 
     public ArrayList<User_Details> getUser_details() {
@@ -116,9 +99,13 @@ public int position;
     }
 
     public void add(User_Details data) {
+//        if(LeaderBoardFragment.ScrollType.equals("CityWise")){
+//            user_details=new ArrayList<>();
+//        }
         user_details.add(data);
         notifyItemInserted(user_details.size() - 1);
     }
+
 
     public void addAll(List<User_Details> dataList) {
         for (User_Details data : dataList) {
@@ -136,7 +123,10 @@ public int position;
 
     public void clear() {
         isLoadingAdded = false;
-        user_details.clear();
+
+        while (getItemCount() > 0) {
+            remove(getItem(0));
+        }
     }
 
     public boolean isEmpty() {
@@ -166,26 +156,16 @@ public int position;
     }
 
     public class Users_ViewHolder extends RecyclerView.ViewHolder {
-        public TextView userName, userAge, userRating;
+        public TextView userName, location, userRating;
         public ImageView userImage;
 
         public Users_ViewHolder(View view) {
             super(view);
-            userName = (TextView) view.findViewById(R.id.txvUserName);
-            userAge = (TextView) view.findViewById(R.id.txvUserAge);
-            userRating = (TextView) view.findViewById(R.id.txvUserRating);
-            userImage = (ImageView) view.findViewById(R.id.imvUserPic);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent data = new Intent(view.getContext(), ProfileActivity.class);
-                    data.putExtra(USERS_Details_NODE, user_details.get(getAdapterPosition()));
-                    view.getContext().startActivity(data);
-                }
-            });
+            userName = (TextView) view.findViewById(R.id.txt_Name);
+            location = (TextView) view.findViewById(R.id.txt_Place);
+            userRating = (TextView) view.findViewById(R.id.txt_Rank);
+            userImage = (ImageView) view.findViewById(R.id.imv_Profile);
         }
-
-
     }
 
     public class Loading_ViewHolder extends RecyclerView.ViewHolder {
@@ -194,5 +174,16 @@ public int position;
             super(itemView);
         }
     }
+
+//    public  void sortbyAge(){
+//        LeaderBoardFragment.ScrollType="Age";
+//        Collections.sort(user_details, new Comparator<User_Details>() {
+//            public int compare(User_Details p1, User_Details p2) {
+//                return p1.getAge().compareTo(p2.getAge());
+//            }
+//        });
+//        notifyDataSetChanged();
+//    }
+
 
 }

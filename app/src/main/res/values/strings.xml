@@ -14,5 +14,9 @@
     <string name="location_not_found">please enter your location in profile section</string>
     <string name="education_not_found">please enter your education in profile section</string>
     <string name="about_us">Enter something interesting about yourself :)</string>
+    <string name="age">Age</string>
+    <string name="location">Location</string>
+    <string name="citywise">CityWise</string>
+    <string name="overall">Overall</string>
 
 </resources>

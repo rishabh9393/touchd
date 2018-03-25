@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -566,7 +565,7 @@ public class User_Details implements Parcelable {
     private String birthday;
     private List<String> interested_in;
     private String id;
-    private String age;
+    private int age;
     private String ranking;
     private Integer points;
     private List<Education> education;
@@ -610,7 +609,7 @@ public class User_Details implements Parcelable {
         this.balance = balance;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
@@ -640,7 +639,7 @@ public class User_Details implements Parcelable {
     }
 
 
-    public void setAge(String dob) {
+    public void setAge(int dob) {
 
         this.age = dob;
     }
@@ -771,7 +770,7 @@ public class User_Details implements Parcelable {
         dest.writeString(this.birthday);
         dest.writeStringList(this.interested_in);
         dest.writeString(this.id);
-        dest.writeString(this.age);
+        dest.writeInt(this.age);
         dest.writeString(this.ranking);
         dest.writeValue(this.points);
         dest.writeList(this.education);
@@ -794,7 +793,7 @@ public class User_Details implements Parcelable {
         this.birthday = in.readString();
         this.interested_in = in.createStringArrayList();
         this.id = in.readString();
-        this.age = in.readString();
+        this.age = in.readInt();
         this.ranking = in.readString();
         this.points = (Integer) in.readValue(Integer.class.getClassLoader());
         this.education = new ArrayList<Education>();

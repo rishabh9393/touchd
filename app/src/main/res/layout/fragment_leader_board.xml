@@ -3,27 +3,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context="app.touched.com.touched.Fragments.LeaderBoardFragment">
 
     <!-- TODO: Update blank fragment layout -->
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content">
-       <TextView
-           android:id="@+id/txt_FilterBy"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
-       <ImageView
-           android:id="@+id/imv_filterby"
-           android:layout_width="42dp"
-           android:layout_height="42dp" />
-       <ImageView
-           android:layout_width="42dp"
-           android:layout_height="42dp" />
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content" />
-   </RelativeLayout>
+        <TextView
+            android:id="@+id/txt_FilterBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter By"
+            android:textSize="@dimen/textsize" />
+
+        <ImageView
+            android:id="@+id/imv_Filterby"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/txt_FilterBy"
+            android:src="@drawable/filter_by" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/imv_Filterby"
+            android:gravity="right">
+
+            <ImageView
+                android:id="@+id/imv_Sortby"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/sorticon" />
+
+            <TextView
+                android:id="@+id/txt_Sortby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/imv_Sortby"
+                android:text="Sort By"
+                android:textSize="@dimen/textsize" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relative1"></android.support.v7.widget.RecyclerView>
+
 
 </RelativeLayout>

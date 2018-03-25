@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
+<color name="purple">#800080</color>
     <color name="color_tab_1">#455C65</color>
     <color name="color_tab_2">#00886A</color>
     <color name="color_tab_3">#8B6B62</color>
@@ -16,4 +16,5 @@
         <item name="tab_4">#6C4A42</item>
         <item name="tab_5">#F63D2B</item>
     </array>
+    <color name="profilebackground">#f4f2f4</color>
 </resources>

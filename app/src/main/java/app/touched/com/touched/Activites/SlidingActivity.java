@@ -7,15 +7,12 @@ package app.touched.com.touched.Activites;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,16 +21,13 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -43,25 +37,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
-import com.viewpagerindicator.CirclePageIndicator;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.StringReader;
-import java.lang.ref.Reference;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import app.touched.com.touched.Adapter.SlidingImage_Adapter;
 import app.touched.com.touched.Fragments.SliderImagesFragment;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.User_Details;
@@ -251,9 +233,9 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
 
                                 String[] splitDate = dob.split("/");
                                 String age = TimeUtils.getAge(Integer.parseInt(splitDate[2]), Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[0]));
-                                user_details.setAge(age);
+                                user_details.setAge(Integer.parseInt(age));
                             } else {
-                                user_details.setAge("18");
+                                user_details.setAge(18);
                             }
                             user_details.setNo_gifts("0");
                             user_details.setNo_refunds("0");

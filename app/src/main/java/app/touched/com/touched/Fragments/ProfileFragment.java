@@ -25,12 +25,10 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 import app.touched.com.touched.Adapter.InterestAdapter;
-import app.touched.com.touched.Adapter.Users_Adapter;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
 
-import static app.touched.com.touched.Utilities.Constants.EXPLORE_FRAGMENT;
 import static app.touched.com.touched.Utilities.Constants.FEMALE;
 import static app.touched.com.touched.Utilities.Constants.IS_OTHER;
 import static app.touched.com.touched.Utilities.Constants.MALE;
@@ -111,7 +109,7 @@ public class ProfileFragment extends Fragment {
             profileUsersDetail =data.getParcelable(USERS_Details_NODE);
         }
         myName.setText(profileUsersDetail.getFirst_name() + " " + profileUsersDetail.getLast_name());
-        myAge.setText(profileUsersDetail.getAge());
+        myAge.setText(String.valueOf(profileUsersDetail.getAge()));
         myLocation.setText(profileUsersDetail.getLocation() != null ? profileUsersDetail.getLocation().getName() : "");
         myPosition.setText(profileUsersDetail.getWork() != null ? profileUsersDetail.getWork().getDescription() : "");
         myCityRanking.setText(profileUsersDetail.getRanking());
