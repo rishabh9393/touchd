@@ -49,7 +49,6 @@ public class ExploreFragment extends Fragment {
     private long totalData = 0;
 
     private Users_Adapter mAdapter;
-    ;
 
     private ArrayList<User_Details> full_user_details = new ArrayList<>();
     User_Details myDetails = new User_Details();
@@ -113,6 +112,7 @@ public class ExploreFragment extends Fragment {
         SpinnerAdapter dataAdapter = new SpinnerAdapter(view.getContext(), filteredData);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(spinnerItemSelectedListner);
+        filterValue=filteredData.get(0);
         getCityWiseData();
     }
 
@@ -189,8 +189,12 @@ public class ExploreFragment extends Fragment {
 
             for (DataSnapshot value : dataSnapshot.getChildren()) {
                 lastKey = value.getKey();
-                User_Details exploreUsersDetail = value.getValue(User_Details.class);
-                full_user_details.add(exploreUsersDetail);
+                if (!lastKey.equals(myDetails.getId())) {
+                    User_Details exploreUsersDetail = value.getValue(User_Details.class);
+                    full_user_details.add(exploreUsersDetail);
+                } else {
+                    totalData -= 1;
+                }
             }
 
             if (dataSnapshot.getChildrenCount() < 100)
@@ -216,5 +220,5 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        }
+    }
 }

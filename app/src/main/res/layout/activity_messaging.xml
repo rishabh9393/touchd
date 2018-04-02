@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        local:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="20dp"
+            android:src="@drawable/contact_ic" />
+
+        <TextView
+            android:id="@+id/txvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_leftOf="@id/profile"
+            android:layout_marginLeft="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rev_chat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:divider="@drawable/chat_divider"
+            android:paddingBottom="4dp"
+            android:paddingTop="8dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:stackFromBottom="false"
+            android:transcriptMode="normal" />
+
+        <FrameLayout
+            android:id="@+id/fl_attachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/reveal_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/imv_gallery"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/gallerysend" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Gallery" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/imv_camera"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/camera" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Camera" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/imv_gift1"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/elephant" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Gift 1" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/imv_gift2"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/coffee" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Gift 2" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/imv_gift3"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/gend" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Gift 3" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/imv_gift4"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/row" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Gift 4" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@android:color/black" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/currentdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:visibility="gone" />
+        <!--android:background="@drawable/shape"-->
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottomlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/imv_camera_bottom"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/camera"
+            android:scaleType="centerInside" />
+
+        <LinearLayout
+            android:id="@+id/chatLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/borderLayout"
+            android:minHeight="50dp"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/edt_writeMsg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:hint="Type your message"
+                android:inputType="textMultiLine"
+                android:padding="10dp"
+                android:singleLine="false"
+                android:textColorHint="#c4c0bd"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imv_sendMsg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/input_circle_normal"
+            android:scaleType="centerInside"
+            android:src="@drawable/input_send" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_gravity="left"
+    android:layout_margin="5dp"
+    android:gravity="left">
+
+    <LinearLayout
+        android:id="@+id/incoming_layout_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="80dp"
+        android:background="@drawable/balloon_incoming_normal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_name"
+            style="@style/chat_timings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
+            android:padding="2dp" />
+
+        <TextView
+            android:id="@+id/msgtxt_id"
+            style="@style/chat_text_message_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="8dp"
+            android:autoLink="web"
+            android:text="hi" />
+
+        <TextView
+            android:id="@+id/date_id"
+            style="@style/chat_timings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
+            android:padding="2dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/bubble_layout_parent"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" >-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/bubble_layout"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/size"-->
+    <!--android:layout_marginBottom="5dp"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:layout_marginRight="10dp">-->
+    <!--<TextView-->
+    <!--android:id="@+id/msgtxt_id"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:maxEms="12"-->
+    <!--android:textSize="20dp"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:textColor="@android:color/primary_text_light" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/date_id"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:maxEms="12"-->
+    <!--android:textSize="10dp"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:textColor="@android:color/primary_text_light" />-->
+
+
+    <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:orientation="vertical" android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="92dp"-->
+    <!--android:layout_height="39dp"-->
+    <!--android:layout_gravity="left"-->
+    <!--android:background="@drawable/size"-->
+    <!--android:minWidth="80dp"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/date_id"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="left"-->
+    <!--android:layout_margin="5dp"-->
+    <!--android:padding="5dp"-->
+    <!--android:textColor="@android:color/darker_gray" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/msgtxt_id"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="left"-->
+    <!--android:layout_margin="5dp"-->
+    <!--android:padding="5dp"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="@color/white" />-->
+
+    <!--</LinearLayout>-->
+    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/name"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textColor="@android:color/darker_gray"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:padding="5dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_margin="5dp"/>&ndash;&gt;-->
+
+    <!--</LinearLayout>-->

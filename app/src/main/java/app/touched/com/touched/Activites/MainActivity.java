@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -27,14 +29,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import app.touched.com.touched.Adapter.DemoViewPagerAdapter;
 import app.touched.com.touched.Fragments.DemoFragment;
 import app.touched.com.touched.MainApplicationClass;
+import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
 import app.touched.com.touched.Utilities.Constants;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MainActivity extends BaseActivity {
@@ -51,6 +56,11 @@ public class MainActivity extends BaseActivity {
     private Fragment currentFragment;
     private DemoViewPagerAdapter adapter;
     private ArrayList<AHBottomNavigationItem> bottomNavigationItems = new ArrayList<>();
+    private CircleImageView profileImage;
+    private TextView userName;
+    private User_Details myDetails = new User_Details();
+    public static int navItemIndex = 0;
+    View navHeader;
 
     // private boolean useMenuResource = true;
     // private int[] tabColors;
@@ -63,18 +73,21 @@ public class MainActivity extends BaseActivity {
 //        setTheme(enabledTranslucentNavigation ? R.style.AppTheme_TranslucentNavigation : R.style.AppTheme);
 
         setContentView(R.layout.activity_main);
-       //  Toast.makeText(this, "welcome " + myBasicDetails.getDisplayName(), Toast.LENGTH_SHORT).show();
-
-      //  setUpToolbar();
+        //  Toast.makeText(this, "welcome " + myBasicDetails.getDisplayName(), Toast.LENGTH_SHORT).show();
+        myDetails = ((MainApplicationClass) getApplication()).getProfileUsersDetail();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        setUpNavDrawer();
-
+        setUpToolbar();
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
         viewPager = findViewById(R.id.view_pager);
+        navHeader = mNavigationView.getHeaderView(0);
+        profileImage = (CircleImageView) navHeader.findViewById(R.id.imv_Profile);
+        userName = (TextView) navHeader.findViewById(R.id.txvName);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+
+        setUpNavDrawer();
 
 // Create items
 //        if (useMenuResource) {
@@ -232,8 +245,14 @@ public class MainActivity extends BaseActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-//                menuItem.setChecked(true);
+                //menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_home:
+                        navItemIndex = 0;
+                        break;
 
+                }
 //                switch (menuItem.getItemId()) {
 //                    case R.id.navigation_item_1:
 //                        Snackbar.make(mContentFrame, "Item One",
@@ -256,7 +275,7 @@ public class MainActivity extends BaseActivity {
 //                        mDrawerLayout.closeDrawers();
 //                        return true;
 //                    default:
-                        return true;
+                return true;
 //                }
             }
         });
@@ -271,34 +290,63 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.drawer_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
+    //    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.drawer_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
 //        switch (item.getItemId()) {
 //            case R.id.navigation_item_1:
 //                return true;
 //        }
-        return super.onOptionsItemSelected(item);
-    }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void setUpNavDrawer() {
-        if (mToolbar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
-            });
-        }
+        Picasso.with(this).load(myDetails.getPicture().getData().getUrl()).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
+        userName.setText(myDetails.getFirst_name() + " " + myDetails.getLast_name());
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.openDrawer, R.string.closeDrawer) {
 
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        //calling sync state is necessary or else your hamburger icon wont show up
+        actionBarDrawerToggle.syncState();
+//        if (mToolbar != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+//            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    mDrawerLayout.openDrawer(GravityCompat.START);
+//                }
+//            });
+//        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
     }
 }
 

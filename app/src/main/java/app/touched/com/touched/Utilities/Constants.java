@@ -24,7 +24,7 @@ public class Constants {
     public static final String MALE="male";
     public static final String FEMALE="female";
     public static final String LOCATION_NAME="location/name";
-
+    public static final String FRIENDS_TAG="friend_details";
 
 
 

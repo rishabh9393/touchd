@@ -1,12 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+
     <style name="FullyTranslucent" parent="android:Theme.Translucent.NoTitleBar">
         <item name="android:progressBarStyle">@style/InvisibleProgress</item>
     </style>
@@ -14,4 +9,16 @@
     <style name="InvisibleProgress">
         <item name="android:visibility">gone</item>
     </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
+    </style>
+
+
 </resources>

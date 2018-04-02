@@ -61,6 +61,7 @@ public class SplashScreen extends AppCompatActivity {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
 
+            dbToCollectExploreData.removeEventListener(userDetailListner);
 
             profileUsersDetail = dataSnapshot.getValue(User_Details.class);
             if (profileUsersDetail != null) {
@@ -68,6 +69,7 @@ public class SplashScreen extends AppCompatActivity {
                 ((MainApplicationClass) SplashScreen.this.getApplication()).setProfileUsersDetail(profileUsersDetail);
                 Intent i = new Intent(SplashScreen.this, MainActivity.class);
                 startActivity(i);
+// ask  them how many developers you have for android, i dont want to work alone. in the single project
                 finish();
 
             } else {
@@ -89,6 +91,5 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        dbToCollectExploreData.removeEventListener(userDetailListner);
     }
 }

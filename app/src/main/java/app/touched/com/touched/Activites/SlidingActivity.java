@@ -215,7 +215,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
             Log.e("user ", user.getUid());
             ((MainApplicationClass) this.getApplication()).setMyDetails(user);
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture,address,birthday,education,work,interested_in");
+            parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture.height(1000),address,birthday,education,work,interested_in");
 
             GraphRequest request = GraphRequest.newMeRequest(
 
