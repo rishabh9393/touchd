@@ -29,8 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_leftOf="@id/profile"
-            android:layout_marginLeft="20dp"
+
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@android:color/white"
@@ -60,7 +59,7 @@
             android:id="@+id/fl_attachment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/reveal_items"
@@ -262,7 +261,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@drawable/borderLayout"
+            android:background="@drawable/border_layout"
             android:minHeight="50dp"
             android:orientation="horizontal">
 

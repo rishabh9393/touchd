@@ -111,7 +111,10 @@ public class MainActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         }
-        bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
+        bottomNavigation.setTranslucentNavigationEnabled(false);
+        bottomNavigation.setColored(true);
+        bottomNavigation.setBackgroundColor(Color.BLACK);
+        bottomNavigation.setDefaultBackgroundColor(Color.BLACK);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -128,16 +131,15 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        bottomNavigation.setAccentColor(Color.BLUE);
-        bottomNavigation.setInactiveColor(Color.DKGRAY);
+//        bottomNavigation.setAccentColor(Color.BLUE);
+//        bottomNavigation.setInactiveColor(Color.DKGRAY);
         viewPager.setOffscreenPageLimit(4);
         adapter = new DemoViewPagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(adapter);
 
         currentFragment = adapter.getCurrentFragment();
 
-        bottomNavigation.setTranslucentNavigationEnabled(true);
-        bottomNavigation.setColored(true);
+
         //bottomNavigation.setCurrentItem(1);
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 

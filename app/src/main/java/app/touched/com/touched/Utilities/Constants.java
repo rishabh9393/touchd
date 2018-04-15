@@ -25,7 +25,11 @@ public class Constants {
     public static final String FEMALE="female";
     public static final String LOCATION_NAME="location/name";
     public static final String FRIENDS_TAG="friend_details";
+    public static final String MSG_NODE="messages";
+    public static final String IS_ONLINE="true";
 
 
+
+    public static final int MY_MESSAGE = 0, OTHER_MESSAGE = 1, MY_IMAGE_MSG = 2, OTHER_IMAGE_MSG = 3;
 
 }

@@ -52,11 +52,11 @@
 
             <ImageView
                 android:id="@+id/user_reply_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="bottom"
-                android:paddingBottom="3dp"
-                android:src="@drawable/message_got_receipt_from_server" />
+                android:layout_margin="10dp"
+                android:src="@drawable/message_sending" />
 
         </LinearLayout>
 

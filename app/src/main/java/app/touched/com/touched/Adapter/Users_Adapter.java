@@ -94,7 +94,7 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 if (rating != null)
                     viewHolder.userRating.setText(user_details.getRanking().isEmpty() ? "0" : user_details.getRanking());
                 else viewHolder.userRating.setText("0");
-                    viewHolder.userAge.setText(String.valueOf(user_details.getAge()));
+                viewHolder.userAge.setText(String.valueOf(user_details.getAge()));
                 break;
             case LOADING:
                 break;
@@ -131,6 +131,7 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         for (User_Details data : dataList) {
             add(data);
         }
+        notifyDataSetChanged();
     }
 
     public void remove(User_Details city) {
@@ -143,7 +144,7 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public void clear() {
         isLoadingAdded = false;
-        user_details=new ArrayList<>();
+        user_details = new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -172,16 +173,8 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void filterByOnline(ArrayList<User_Details> list) {
         if (user_details.size() > 0)
             clear();
+        addAll(list);
 
-
-        ArrayList<User_Details> filerlist = new ArrayList<>();
-        for (User_Details data : list) {
-            if (data.getIs_login().equals("true")) {
-                filerlist.add(data);
-
-            }
-        }
-        addAll(filerlist);
 
     }
 
@@ -194,7 +187,7 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         }
 
-    addAll(filerlist);
+        addAll(filerlist);
     }
 
     public void filterByWork(ArrayList<User_Details> list, String myWork) {
@@ -206,7 +199,13 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         }
 
-    addAll(filerlist);
+        addAll(filerlist);
+    }
+
+    public void filterByLocation(ArrayList<User_Details> list) {
+
+
+        addAll(list);
     }
 
     public void filterByEducation(ArrayList<User_Details> list, String myEdu) {

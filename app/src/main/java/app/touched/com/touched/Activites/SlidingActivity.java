@@ -151,7 +151,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View view) {
                 //  loginButton.performClick();
                 DialogsUtils.showProgressDialog(SlidingActivity.this, "Login", "Please wait while we are connecting you to the facebook");
-                LoginManager.getInstance().logInWithReadPermissions(SlidingActivity.this, Arrays.asList("public_profile", "email", "user_photos", "user_about_me", "user_birthday", "user_education_history", "user_hometown", "user_location", "user_work_history", "user_events"));
+                LoginManager.getInstance().logInWithReadPermissions(SlidingActivity.this, Arrays.asList("public_profile", "email", "user_photos", "user_birthday", "user_hometown", "user_location", "user_events"));
 
             }
         });
@@ -289,7 +289,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         mDatabase = FirebaseDatabase.getInstance().getReference();
         Log.e("access token", accessToken.getUserId());
         Log.e("user id", user_details.getUser_id());
-
+        user_details.setUser_id(firebaseUser.getUid());
         Users users = new Users(user_details.getUser_id(), user_details.getEmail(), TimeUtils.getCurrentDateTime(), "true", TimeUtils.getCurrentDateTime());
 
         users.setGifts_counts("0");

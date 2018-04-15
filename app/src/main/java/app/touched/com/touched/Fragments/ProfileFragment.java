@@ -3,6 +3,7 @@ package app.touched.com.touched.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,12 +26,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
+import app.touched.com.touched.Activites.MessagingActivity;
 import app.touched.com.touched.Adapter.InterestAdapter;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
 
 import static app.touched.com.touched.Utilities.Constants.FEMALE;
+import static app.touched.com.touched.Utilities.Constants.FRIENDS_TAG;
 import static app.touched.com.touched.Utilities.Constants.IS_OTHER;
 import static app.touched.com.touched.Utilities.Constants.MALE;
 import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
@@ -150,10 +153,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         switch (view.getId())
         {
             case R.id.imvMaleMsg:
+               startActivity(new Intent(getActivity(), MessagingActivity.class).putExtra(FRIENDS_TAG,profileUsersDetail));
                 break;
             case R.id.imvMalePoke:
                 break;
             case R.id.imvFemaleMsg:
+               startActivity(new Intent(getActivity(), MessagingActivity.class).putExtra(FRIENDS_TAG,profileUsersDetail));
+
                 break;
             case R.id.imvFemalePoke:
                 break;

@@ -1,5 +1,7 @@
 package app.touched.com.touched.Utilities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,5 +34,27 @@ public class TimeUtils {
         String ageS = ageInt.toString();
 
         return ageS;
+    }
+
+    public static String getMsgTime(String date)
+    {Date _date = null;
+        String datee = null;
+        int min;
+        String minute;
+        try {
+            _date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss Z").parse(date);
+            min=_date.getMinutes();
+            if(min<=9){
+                minute="0"+Long.toString(_date.getMinutes());
+            }else{
+                minute=Long.toString(_date.getMinutes());
+            }
+            datee = Long.toString(_date.getHours()) + ":" + minute;
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return datee;
     }
 }

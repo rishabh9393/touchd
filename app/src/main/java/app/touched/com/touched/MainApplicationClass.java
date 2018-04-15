@@ -2,6 +2,7 @@ package app.touched.com.touched;
 
 import android.app.Application;
 import android.content.ComponentCallbacks2;
+import android.support.multidex.MultiDexApplication;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;

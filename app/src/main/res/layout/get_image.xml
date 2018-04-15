@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/layout_root"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/image_full_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true" />
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/send_Imgid"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:background="@drawable/input_circle_normal"-->
+        <!--android:src="@drawable/input_send" />-->
+
+</FrameLayout>

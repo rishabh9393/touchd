@@ -311,6 +311,15 @@ public class User_Details implements Parcelable {
         private String id, name;
         private String Latitude;
         private String Longitude;
+private float distance;
+
+        public float getDistance() {
+            return distance;
+        }
+
+        public void setDistance(float distance) {
+            this.distance = distance;
+        }
 
         public String getLatitude() {
             return Latitude;
@@ -344,6 +353,9 @@ public class User_Details implements Parcelable {
             this.name = name;
         }
 
+        public Location() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -355,9 +367,7 @@ public class User_Details implements Parcelable {
             dest.writeString(this.name);
             dest.writeString(this.Latitude);
             dest.writeString(this.Longitude);
-        }
-
-        public Location() {
+            dest.writeFloat(this.distance);
         }
 
         protected Location(Parcel in) {
@@ -365,6 +375,7 @@ public class User_Details implements Parcelable {
             this.name = in.readString();
             this.Latitude = in.readString();
             this.Longitude = in.readString();
+            this.distance = in.readFloat();
         }
 
         public static final Creator<Location> CREATOR = new Creator<Location>() {

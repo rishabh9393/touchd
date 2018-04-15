@@ -5,7 +5,70 @@ package app.touched.com.touched.Models;
  */
 
 public class MessageModel {
-    private String msg_id,name,senderEmail,timestamp,isRead,isDelivered,isMetaData,metaType,msgContent;
+    private String localUri, msg_id, name, senderEmail, timestamp, isRead, isDelivered, deliveredTime, readTime, isSent, SentTime, isMetaData, metaType, msgContent;
+    private boolean isMine;
+
+    public MessageModel() {
+
+    }
+
+    public MessageModel(String name, String senderEmail, String timestamp, String isMetaData, String metaType, String msgContent) {
+        this.name = name;
+        this.senderEmail = senderEmail;
+        this.timestamp = timestamp;
+        this.isMetaData = isMetaData;
+        this.metaType = metaType;
+        this.msgContent = msgContent;
+    }
+
+    public boolean isMine() {
+        return isMine;
+    }
+
+    public void setMine(boolean mine) {
+        isMine = mine;
+    }
+
+    public String getLocalUri() {
+        return localUri;
+    }
+
+    public void setLocalUri(String localUri) {
+        this.localUri = localUri;
+    }
+
+
+    public String getDeliveredTime() {
+        return deliveredTime;
+    }
+
+    public void setDeliveredTime(String deliveredTime) {
+        this.deliveredTime = deliveredTime;
+    }
+
+    public String getReadTime() {
+        return readTime;
+    }
+
+    public void setReadTime(String readTime) {
+        this.readTime = readTime;
+    }
+
+    public String getIsSent() {
+        return isSent;
+    }
+
+    public void setIsSent(String isSent) {
+        this.isSent = isSent;
+    }
+
+    public String getSentTime() {
+        return SentTime;
+    }
+
+    public void setSentTime(String sentTime) {
+        SentTime = sentTime;
+    }
 
     public String getMsg_id() {
         return msg_id;

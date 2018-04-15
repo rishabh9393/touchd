@@ -242,39 +242,7 @@ public class LeaderBoardFragment extends Fragment implements View.OnClickListene
         Userdetailsnode.orderByChild("location/name").limitToFirst(50).addValueEventListener(getValueFromDbCallBack);
     }
 
-    private class NearbyLocation extends AsyncTask<Intent, String, String> {
-        private int response;
-        Bitmap bitmap = null;
-        String picturePath, encoded, path;
-        ProgressDialog pDialog;
 
-        @Override
-        protected String doInBackground(Intent... params) {
-
-
-            return path;
-        }
-
-        @Override
-        protected void onPostExecute(String aVoid) {
-            super.onPostExecute(aVoid);
-            pDialog.dismiss();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-
-            super.onPreExecute();
-
-        }
-    }
     public void update(){
         final ArrayList names =new ArrayList();
         names.add(40);
