@@ -151,7 +151,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View view) {
                 //  loginButton.performClick();
                 DialogsUtils.showProgressDialog(SlidingActivity.this, "Login", "Please wait while we are connecting you to the facebook");
-                LoginManager.getInstance().logInWithReadPermissions(SlidingActivity.this, Arrays.asList("public_profile", "email", "user_photos", "user_birthday", "user_hometown", "user_location", "user_events"));
+                LoginManager.getInstance().logInWithReadPermissions(SlidingActivity.this, Arrays.asList("public_profile", "email", "user_photos", "user_birthday", "user_hometown", "user_location", "user_likes"));
 
             }
         });
@@ -215,7 +215,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
             Log.e("user ", user.getUid());
             ((MainApplicationClass) this.getApplication()).setMyDetails(user);
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture.height(1000),address,birthday,education,work,interested_in");
+            parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture.height(1000),address,birthday,interested_in,likes");
 
             GraphRequest request = GraphRequest.newMeRequest(
 
@@ -301,11 +301,12 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         childUpdates.put("/" + Constants.USERS_Details_NODE + "/" + firebaseUser.getUid(), user_details);
         childUpdates.put("/" + Constants.USERS_NODE + "/" + firebaseUser.getUid(), users);
 
-        mDatabase.setValue(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+        mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isComplete()) {
                     ((MainApplicationClass) getApplication()).setProfileUsersDetail(user_details);
+
                     DialogsUtils.hideProgressDialog();
                     startActivity(new Intent(SlidingActivity.this, MainActivity.class));
                     finish();

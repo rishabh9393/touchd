@@ -567,6 +567,39 @@ public class User_Details implements Parcelable {
         };
     }
 
+    public static class Like {
+        private String name;
+        private String id;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+    }
+
+    public static class LikeList {
+        List<Like> data;
+
+        public List<Like> getData() {
+            return data;
+        }
+
+        public void setData(List<Like> data) {
+            this.data = data;
+        }
+    }
+
     private String is_login;
     private String email;
     private String first_name;
@@ -589,9 +622,16 @@ public class User_Details implements Parcelable {
     private String balance;
     private Fb_Photos photos;
     private String msg_count;
-private String key;
+    private String key;
+    private LikeList likes;
 
+    public LikeList getLikes() {
+        return likes;
+    }
 
+    public void setLikes(LikeList likes) {
+        this.likes = likes;
+    }
 
     public String getKey() {
         return key;
@@ -708,7 +748,6 @@ private String key;
     public void setLocation(Location location) {
         this.location = location;
     }
-
 
 
     public User_Details() {

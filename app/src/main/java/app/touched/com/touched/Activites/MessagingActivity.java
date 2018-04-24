@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -95,6 +96,8 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void intializeControls() {
+        android.support.v7.widget.Toolbar toolbar=(android.support.v7.widget.Toolbar)findViewById(R.id.tool);
+        setSupportActionBar(toolbar);
         imvGallery = (ImageButton) findViewById(R.id.imv_gallery);
         imvCamera = (ImageButton) findViewById(R.id.imv_camera);
         imvGift1 = (ImageButton) findViewById(R.id.imv_gift1);

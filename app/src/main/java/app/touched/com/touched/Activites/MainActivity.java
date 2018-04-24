@@ -1,6 +1,7 @@
 package app.touched.com.touched.Activites;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,16 +26,19 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import app.touched.com.touched.Adapter.DemoViewPagerAdapter;
 import app.touched.com.touched.Fragments.DemoFragment;
+import app.touched.com.touched.HomePage;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
@@ -253,6 +257,12 @@ public class MainActivity extends BaseActivity {
                     case R.id.navigation_home:
                         navItemIndex = 0;
                         break;
+                    case R.id.navigation_signout:
+                        mAuth.signOut();
+                        LoginManager.getInstance().logOut();
+                        Intent in = new Intent(MainActivity.this, SlidingActivity.class);
+                        in.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(in);
 
                 }
 //                switch (menuItem.getItemId()) {
@@ -309,7 +319,7 @@ public class MainActivity extends BaseActivity {
 //    }
 
     private void setUpNavDrawer() {
-        Picasso.with(this).load(myDetails.getPicture().getData().getUrl()).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
+        Picasso.with(this).load(myDetails.getPicture().getData().getUrl()).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
         userName.setText(myDetails.getFirst_name() + " " + myDetails.getLast_name());
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.openDrawer, R.string.closeDrawer) {
 
