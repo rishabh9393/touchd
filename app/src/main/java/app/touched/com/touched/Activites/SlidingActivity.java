@@ -247,6 +247,8 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
                                 User_Details.Location location = new User_Details.Location();
                                 location.setLongitude(locationManagerUtility.getLongitude());
                                 location.setLatitude(locationManagerUtility.getLatitude());
+                                user_details.setLocation(location);
+                                //get city
                             }
                             getPhotosFromTheFb(user_details, user);
 
@@ -266,7 +268,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
     private void getPhotosFromTheFb(final User_Details user_details, final FirebaseUser user) {
         new GraphRequest(
                 accessToken,
-                "/" + user_details.getUser_id() + "/photos",
+                "/" + user_details.getId() + "/photos",
                 null,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
@@ -285,13 +287,12 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         ).executeAsync();
     }
 
-    private void uploadUserDetailsToDB(User_Details user_details, FirebaseUser firebaseUser) {
+    private void uploadUserDetailsToDB(final User_Details user_details, FirebaseUser firebaseUser) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         Log.e("access token", accessToken.getUserId());
-        Log.e("user id", user_details.getUser_id());
-        user_details.setUser_id(firebaseUser.getUid());
-        Users users = new Users(user_details.getUser_id(), user_details.getEmail(), TimeUtils.getCurrentDateTime(), "true", TimeUtils.getCurrentDateTime());
-
+        // Log.e("user id", user_details.getUser_id());
+        user_details.setKey(firebaseUser.getUid());
+        Users users = new Users(user_details.getId(), user_details.getEmail(), TimeUtils.getCurrentDateTime(), "true", TimeUtils.getCurrentDateTime());
         users.setGifts_counts("0");
         users.setRefund_amount("0");
         user_details.setIs_login("true");
@@ -300,13 +301,18 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         childUpdates.put("/" + Constants.USERS_Details_NODE + "/" + firebaseUser.getUid(), user_details);
         childUpdates.put("/" + Constants.USERS_NODE + "/" + firebaseUser.getUid(), users);
 
-        mDatabase.updateChildren(childUpdates);
-        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
-
-        ((MainApplicationClass) getApplication()).setProfileUsersDetail(user_details);
-        DialogsUtils.hideProgressDialog();
-        startActivity(new Intent(SlidingActivity.this, MainActivity.class));
-        finish();
+        mDatabase.setValue(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isComplete()) {
+                    ((MainApplicationClass) getApplication()).setProfileUsersDetail(user_details);
+                    DialogsUtils.hideProgressDialog();
+                    startActivity(new Intent(SlidingActivity.this, MainActivity.class));
+                    finish();
+                }
+            }
+        });
+        // Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
 
 
     }

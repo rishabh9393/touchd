@@ -311,7 +311,7 @@ public class User_Details implements Parcelable {
         private String id, name;
         private String Latitude;
         private String Longitude;
-private float distance;
+        private float distance;
 
         public float getDistance() {
             return distance;
@@ -566,6 +566,7 @@ private float distance;
             }
         };
     }
+
     private String is_login;
     private String email;
     private String first_name;
@@ -588,6 +589,18 @@ private float distance;
     private String balance;
     private Fb_Photos photos;
     private String msg_count;
+private String key;
+
+
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     public String getMsg_count() {
         return msg_count;
     }
@@ -696,13 +709,7 @@ private float distance;
         this.location = location;
     }
 
-    public String getUser_id() {
-        return id;
-    }
 
-    public void setUser_id(String user_id) {
-        this.id = user_id;
-    }
 
     public User_Details() {
     }
@@ -746,6 +753,7 @@ private float distance;
     public void setIs_login(String is_login) {
         this.is_login = is_login;
     }
+
     public String getAbout() {
         return about;
     }
@@ -780,6 +788,20 @@ private float distance;
     }
 
     @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (obj == null || obj.getClass() != getClass()) {
+            result = false;
+        } else {
+            User_Details employee = (User_Details) obj;
+            if (this.id.equals(employee.getId())) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -808,6 +830,7 @@ private float distance;
         dest.writeString(this.balance);
         dest.writeParcelable(this.photos, flags);
         dest.writeString(this.msg_count);
+        dest.writeString(this.key);
     }
 
     protected User_Details(Parcel in) {
@@ -833,6 +856,7 @@ private float distance;
         this.balance = in.readString();
         this.photos = in.readParcelable(Fb_Photos.class.getClassLoader());
         this.msg_count = in.readString();
+        this.key = in.readString();
     }
 
     public static final Creator<User_Details> CREATOR = new Creator<User_Details>() {

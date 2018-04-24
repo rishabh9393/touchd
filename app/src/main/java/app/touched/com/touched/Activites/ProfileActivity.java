@@ -15,7 +15,7 @@ import static app.touched.com.touched.Utilities.Constants.IS_OTHER;
 import static app.touched.com.touched.Utilities.Constants.MALE;
 import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
     User_Details data = new User_Details();
 
     @Override

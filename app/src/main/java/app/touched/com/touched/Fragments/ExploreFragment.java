@@ -261,6 +261,8 @@ public class ExploreFragment extends Fragment {
                 lastKey = value.getKey();
                 if (!lastKey.equals(currentFUser.getUid())) {// later on change this fire id with user id
                     User_Details exploreUsersDetail = value.getValue(User_Details.class);
+                    if (full_user_details.contains(exploreUsersDetail))
+                        full_user_details.remove(exploreUsersDetail);
                     full_user_details.add(exploreUsersDetail);
                 } else {
                     totalData -= 1;

@@ -76,7 +76,7 @@ public class LocationManagerUtility implements LocationListener {
         Latitude = String.valueOf(location.getLatitude());
         Longitude = String.valueOf(location.getLongitude());
 
-        startUsingGPS();
+        stopUsingGPS();
     }
 
     @Override

@@ -5,20 +5,30 @@ package app.touched.com.touched.Models;
  */
 
 public class MessageModel {
-    private String localUri, msg_id, name, senderEmail, timestamp, isRead, isDelivered, deliveredTime, readTime, isSent, SentTime, isMetaData, metaType, msgContent;
+    public String getMeta_no() {
+        return meta_no;
+    }
+
+    public void setMeta_no(String meta_no) {
+        this.meta_no = meta_no;
+    }
+
+    private String meta_no,localUri, msg_id, name, senderEmail, timestamp, isRead, isDelivered, deliveredTime, readTime, isSent, SentTime, isMetaData, metaType, msgContent;
     private boolean isMine;
 
     public MessageModel() {
 
     }
 
-    public MessageModel(String name, String senderEmail, String timestamp, String isMetaData, String metaType, String msgContent) {
+    public MessageModel(String name, String senderEmail, String timestamp, String isMetaData, String metaType, String msgContent,String meta_no,boolean isMine) {
         this.name = name;
         this.senderEmail = senderEmail;
         this.timestamp = timestamp;
         this.isMetaData = isMetaData;
         this.metaType = metaType;
         this.msgContent = msgContent;
+        this.meta_no=meta_no;
+        this.isMine=isMine;
     }
 
     public boolean isMine() {

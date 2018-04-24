@@ -84,7 +84,7 @@ public class MainApplicationClass extends Application {
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
+        storageRef = storage.getReference().child(Constants.MSG_META);
     }
 
 

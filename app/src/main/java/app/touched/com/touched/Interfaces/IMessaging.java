@@ -12,6 +12,7 @@ public interface IMessaging {
      void updateMsg(MessageModel msg);
      void msgDelivered(MessageModel msg);
      void msgRead(MessageModel msg);
-     void sendImageMsg(MessageModel msg);
+
      void sendGiftMsg(MessageModel msg);
+     void uploadImage(MessageModel msg);
 }

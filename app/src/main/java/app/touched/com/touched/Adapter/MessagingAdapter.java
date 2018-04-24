@@ -21,6 +21,9 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -118,7 +121,7 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
                         try {
                             if (!chatList.get(holder.getAdapterPosition()).getLocalUri().isEmpty()) {
                                 DialogBox showImage = new DialogBox(context);
-                                showImage.ShowImage(chatList.get(holder.getAdapterPosition()).getLocalUri());
+                                showImage.ShowImage(chatList.get(holder.getAdapterPosition()).getLocalUri(),chatList.get(holder.getAdapterPosition()).getMsg_id());
                             } else {
                                 showToastForContentNotAvailable(context);
                             }
@@ -129,13 +132,14 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
                 });
                 break;
             case OTHER_IMAGE_MSG:
-//                holder.date.setText(getMsgTime(chatList.get(position).getSentTime()));
-//                holder.username.setText(chatList.get(position).getName());
+                holder.date.setText(getMsgTime(chatList.get(position).getSentTime()));
+                holder.username.setText(chatList.get(position).getName());
+                Picasso.with(context).load(chatList.get(position).getMsgContent()).placeholder(R.drawable.com_facebook_profile_picture_blank_square).networkPolicy(NetworkPolicy.OFFLINE).into(holder.image);
 //                if(oneTimearraylist.contains(chatList.get(position).getSms())){
 //                    holder.progressBar.setVisibility(View.VISIBLE);
 //                    holder.downloadImage.setVisibility(GONE);
 //                }else {
-//                    if (chatModels.get(position).getLocalUrl() == null || chatModels.get(position).getLocalUrl().equals("")) {
+//                    if (chatList.get(position).getLocalUri() == null || chatList.get(position).getLocalUri().equals("")) {
 //                        if (isAutoDownload != null && isAutoDownload.equals("true")) {
 //                            holder.progressBar.setVisibility(View.VISIBLE);
 //                            holder.downloadImage.setVisibility(GONE);
@@ -212,23 +216,21 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
 //                });
 //
 //
-//                holder.image.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            if (chatModels.get(position).getLocalUrl() != null || !chatModels.get(position).getLocalUrl().equals("")) {
-//                                mCurrentPlayingPosition = -1;
-//
-//                                DialogBox showImage = new DialogBox(context);
-//                                showImage.ShowImage(chatModels.get(position).getLocalUrl());
-//                            } else {
-//                                showToastForContentNotAvailable();
-//                            }
-//                        } catch (Exception e) {
-//                            showToastForContentNotAvailable();
-//                        }
-//                    }
-//                });
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (chatList.get(holder.getAdapterPosition()).getLocalUri() != null || !chatList.get(holder.getAdapterPosition()).getLocalUri().equals("")) {
+                                DialogBox showImage = new DialogBox(context);
+                                showImage.ShowImage(chatList.get(holder.getAdapterPosition()).getLocalUri(),chatList.get(holder.getAdapterPosition()).getMsg_id());
+                            } else {
+                               // showToastForContentNotAvailable();
+                            }
+                        } catch (Exception e) {
+                            //showToastForContentNotAvailable();
+                        }
+                    }
+                });
                 break;
         }
     }

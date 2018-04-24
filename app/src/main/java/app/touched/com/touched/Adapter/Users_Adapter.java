@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.internal.util.Predicate;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -86,9 +87,9 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         switch (getItemViewType(position)) {
             case ITEM:
                 Users_ViewHolder viewHolder = (Users_ViewHolder) holder;
-                String photoUrl = FACEBOOK_URL + user_details.getUser_id() + "/picture?height=500";
+                String photoUrl = FACEBOOK_URL + user_details.getId() + "/picture?height=500";
 
-                Picasso.with(activity).load(photoUrl).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
+                Picasso.with(activity).load(photoUrl).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
                 viewHolder.userName.setText(user_details.getFirst_name() + " " + user_details.getLast_name());
                 String rating = user_details.getRanking();
                 if (rating != null)
@@ -162,11 +163,13 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         isLoadingAdded = false;
 
         int position = user_details.size() - 1;
-        User_Details item = getItem(position);
+        if (position >= 0) {
+            User_Details item = getItem(position);
 
-        if (item != null) {
-            user_details.remove(position);
-            notifyItemRemoved(position);
+            if (item != null) {
+                user_details.remove(position);
+                notifyItemRemoved(position);
+            }
         }
     }
 
