@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -53,6 +54,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     LinearLayout femaleLayout, maleLayout;
     Bundle data;
     ImageView imvMaleMsg, imvFemaleMsg, imvMalePoke, imvFemalePoke;
+    FrameLayout frameContainer;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,6 +70,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             OtherProfile = data.getString(IS_OTHER, null);
         }
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
+        frameContainer = (FrameLayout) v.findViewById(R.id.frame_container);
         femaleLayout = (LinearLayout) v.findViewById(R.id.llyFemaleType);
         maleLayout = (LinearLayout) v.findViewById(R.id.llyMaleType);
         recyclerViewInterests = (RecyclerView) v.findViewById(R.id.recycleView);
@@ -99,7 +102,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             maleLayout.setVisibility(View.GONE);
             femaleLayout.setVisibility(View.GONE);
         }
+        frameContainer.setOnClickListener(this);
+
         addFragment();
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         return v;
     }
 
@@ -150,18 +161,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.imvMaleMsg:
-               startActivity(new Intent(getActivity(), MessagingActivity.class).putExtra(FRIENDS_TAG,profileUsersDetail));
+                startActivity(new Intent(getActivity(), MessagingActivity.class).putExtra(FRIENDS_TAG, profileUsersDetail));
                 break;
             case R.id.imvMalePoke:
                 break;
             case R.id.imvFemaleMsg:
-               startActivity(new Intent(getActivity(), MessagingActivity.class).putExtra(FRIENDS_TAG,profileUsersDetail));
+                startActivity(new Intent(getActivity(), MessagingActivity.class).putExtra(FRIENDS_TAG, profileUsersDetail));
 
                 break;
             case R.id.imvFemalePoke:
+                break;
+            case R.id.frame_container:
+                int height = frameContainer.getHeight();
+                if (height == 250) {
+                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT); // or set height to any fixed value you want
+                    frameContainer.setLayoutParams(lp);
+                }
+                else {
+                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,250); // or set height to any fixed value you want
+                    frameContainer.setLayoutParams(lp);
+                }
                 break;
         }
     }

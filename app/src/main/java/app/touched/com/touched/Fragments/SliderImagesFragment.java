@@ -45,7 +45,12 @@ public class SliderImagesFragment extends Fragment {
 
         mPager = (ViewPager) v.findViewById(R.id.pager);
 
+mPager.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
 
+    }
+});
         mPager.setAdapter(new SlidingImage_Adapter(container.getContext(), ImagesArray));
 
 

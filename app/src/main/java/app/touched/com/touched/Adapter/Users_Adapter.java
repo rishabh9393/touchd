@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.internal.util.Predicate;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -86,10 +87,22 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.position = holder.getAdapterPosition();
         switch (getItemViewType(position)) {
             case ITEM:
-                Users_ViewHolder viewHolder = (Users_ViewHolder) holder;
-                String photoUrl = FACEBOOK_URL + user_details.getId() + "/picture?height=500";
+                final Users_ViewHolder viewHolder = (Users_ViewHolder) holder;
+                final String photoUrl = FACEBOOK_URL + user_details.getId() + "/picture?height=500";
 
-                Picasso.with(activity).load(photoUrl).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
+                Picasso.with(activity).load(photoUrl).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // image showing is sucessfull and do nothing
+                    }
+
+                    @Override
+                    public void onError() {
+// if image is failed to download in offline mode then show new one
+                        Picasso.with(activity).load(photoUrl).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
+
+                    }
+                });
                 viewHolder.userName.setText(user_details.getFirst_name() + " " + user_details.getLast_name());
                 String rating = user_details.getRanking();
                 if (rating != null)

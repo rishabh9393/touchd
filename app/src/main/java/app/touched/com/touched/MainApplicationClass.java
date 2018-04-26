@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.Utilities.Constants;
@@ -81,10 +83,22 @@ public class MainApplicationClass extends Application {
     public void onCreate() {
         super.onCreate();
         FirebaseApp.initializeApp(this);
+
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference().child(Constants.MSG_META);
+        // save the data in offline mode and put database ref.sync true any where
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        // save image in offline mode with picaso
+        Picasso.Builder builder = new Picasso.Builder(this);
+
+        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
+        Picasso built = builder.build();
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
+
     }
 
 

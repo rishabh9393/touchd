@@ -45,6 +45,7 @@ import java.util.Map;
 import app.touched.com.touched.Adapter.MessagingAdapter;
 import app.touched.com.touched.Interfaces.IMessaging;
 import app.touched.com.touched.MainApplicationClass;
+import app.touched.com.touched.Models.MessageDeliveryModel;
 import app.touched.com.touched.Models.MessageModel;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
@@ -96,7 +97,7 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void intializeControls() {
-        android.support.v7.widget.Toolbar toolbar=(android.support.v7.widget.Toolbar)findViewById(R.id.tool);
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool);
         setSupportActionBar(toolbar);
         imvGallery = (ImageButton) findViewById(R.id.imv_gallery);
         imvCamera = (ImageButton) findViewById(R.id.imv_camera);
@@ -121,17 +122,20 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
         myDetails = ((MainApplicationClass) getApplication()).getProfileUsersDetail();
         mAuth = ((MainApplicationClass) getApplication()).getmAuth();
         dbToRootNode = FirebaseDatabase.getInstance().getReference();
+
         storageReference = ((MainApplicationClass) getApplication()).getStorageRef();
         myFriend = getIntent().getExtras().getParcelable(FRIENDS_TAG);
-        dbToMyNode = dbToRootNode.child(MSG_NODE).child(myDetails.getId()).child(myFriend.getId());
-        dbToFriendNode = dbToRootNode.child(MSG_NODE).child(myFriend.getId()).child(myDetails.getId());
+        dbToMyNode = dbToRootNode.child(MSG_NODE).child(myDetails.getKey()).child(myFriend.getKey());
+        dbToFriendNode = dbToRootNode.child(MSG_NODE).child(myFriend.getKey()).child(myDetails.getKey());
         dbToMyNode.addChildEventListener(myMsgCallBack);
         dbToFriendNode.addChildEventListener(friendMsgCallback);
+        dbToMyNode.keepSynced(true);
+        dbToFriendNode.keepSynced(true);
         dbToFriendStatus = dbToRootNode.child(USERS_NODE).child(myFriend.getId());
         dbToFriendStatus.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-               // Map values = dataSnapshot.getValue(Map.class);
+                // Map values = dataSnapshot.getValue(Map.class);
                 //userStatus.setText(values.get(IS_LOGIN_NODE).toString());
             }
 
@@ -195,7 +199,7 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                 getMsg.setMine(false);
                 messageModelArrayList.add(0, getMsg);
                 messagingAdapter.notifyItemInserted(0);
-                MessageModel deliverReport = new MessageModel();
+                MessageDeliveryModel deliverReport = new MessageDeliveryModel();
                 deliverReport.setIsDelivered("true");
                 deliverReport.setDeliveredTime(TimeUtils.getCurrentDateTime());
                 dbToMyNode.child(getMsg.getMsg_id()).setValue(deliverReport);
@@ -320,6 +324,7 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         dbToMyNode.removeEventListener(myMsgCallBack);
+        dbToFriendNode.removeEventListener(friendMsgCallback);
     }
 
     @Override
