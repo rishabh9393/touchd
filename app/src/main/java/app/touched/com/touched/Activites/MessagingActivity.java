@@ -429,7 +429,10 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
         super.onOptionsItemSelected(item);
         int id = item.getItemId();
         if (id == R.id.action_attachment) {
-            fl_attachment.setVisibility(View.VISIBLE);
+            if (fl_attachment.getVisibility() == View.VISIBLE)
+                fl_attachment.setVisibility(View.GONE);
+            else
+                fl_attachment.setVisibility(View.VISIBLE);
         }
         return true;
     }

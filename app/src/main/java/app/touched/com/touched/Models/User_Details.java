@@ -589,13 +589,13 @@ public class User_Details implements Parcelable {
     }
 
     public static class LikeList {
-        List<Like> data;
+        ArrayList<Like> data;
 
-        public List<Like> getData() {
+        public ArrayList<Like> getData() {
             return data;
         }
 
-        public void setData(List<Like> data) {
+        public void setData(ArrayList<Like> data) {
             this.data = data;
         }
     }

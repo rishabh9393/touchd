@@ -142,14 +142,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(view.getContext(), 3);
         recyclerViewInterests.setLayoutManager(mLayoutManager);
         recyclerViewInterests.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.Adapter mAdapterInterests = new InterestAdapter(getActivity(), new ArrayList<String>());
+        RecyclerView.Adapter mAdapterInterests = new InterestAdapter(getActivity(), profileUsersDetail.getLikes().getData());
         recyclerViewInterests.setAdapter(mAdapterInterests);
         RecyclerView.LayoutManager mLayoutManagerGallery = new GridLayoutManager(view.getContext(), 3);
 
         recyclerViewPhotos.setLayoutManager(mLayoutManagerGallery);
         recyclerViewPhotos.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.Adapter mAdapterPhotos = new InterestAdapter(getActivity(), new ArrayList<String>());
-        recyclerViewInterests.setAdapter(mAdapterPhotos);
+//        RecyclerView.Adapter mAdapterPhotos = new InterestAdapter(getActivity(), new ArrayList<String>());
+//        recyclerViewInterests.setAdapter(mAdapterPhotos);
     }
 
 
@@ -178,9 +178,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 if (height == 250) {
                     FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT); // or set height to any fixed value you want
                     frameContainer.setLayoutParams(lp);
-                }
-                else {
-                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,250); // or set height to any fixed value you want
+                } else {
+                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 250); // or set height to any fixed value you want
                     frameContainer.setLayoutParams(lp);
                 }
                 break;

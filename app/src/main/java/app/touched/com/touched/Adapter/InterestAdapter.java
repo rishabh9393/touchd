@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
 
 /**
@@ -17,8 +18,8 @@ import app.touched.com.touched.R;
 
 public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.Users_ViewHolder> {
     Context con;
-    ArrayList<String> data;
-    public InterestAdapter(Context context, ArrayList<String> interestData)
+    ArrayList<User_Details.Like> data;
+    public InterestAdapter(Context context, ArrayList<User_Details.Like> interestData)
     {
         con=context;
         data=interestData;
@@ -32,7 +33,7 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.Users_
 
     @Override
     public void onBindViewHolder(Users_ViewHolder holder, int position) {
-holder.interestName.setText(data.get(position));
+holder.interestName.setText(data.get(position).getName());
     }
 
     @Override
