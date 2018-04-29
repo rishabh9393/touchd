@@ -2,13 +2,11 @@ package app.touched.com.touched.Activites;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +17,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,20 +33,19 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import app.touched.com.touched.Adapter.MessagingAdapter;
 import app.touched.com.touched.Interfaces.IMessaging;
 import app.touched.com.touched.MainApplicationClass;
-import app.touched.com.touched.Models.MessageDeliveryModel;
 import app.touched.com.touched.Models.MessageModel;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
-import app.touched.com.touched.Utilities.Constants;
+import app.touched.com.touched.Utilities.CompressFile;
 import app.touched.com.touched.Utilities.MessagingType;
 import app.touched.com.touched.Utilities.RealPathUtil;
 import app.touched.com.touched.Utilities.TimeUtils;
@@ -59,10 +55,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static app.touched.com.touched.Utilities.Constants.CAPTURE_IMAGE_REQ_CODE;
 import static app.touched.com.touched.Utilities.Constants.FRIENDS_TAG;
 import static app.touched.com.touched.Utilities.Constants.GALLERY_IMAGE_REQ_CODE;
-import static app.touched.com.touched.Utilities.Constants.IS_DELIVERED_TAG;
-import static app.touched.com.touched.Utilities.Constants.IS_LOGIN_NODE;
 import static app.touched.com.touched.Utilities.Constants.META_NO;
+import static app.touched.com.touched.Utilities.Constants.MSG_COUNT_NODE;
 import static app.touched.com.touched.Utilities.Constants.MSG_NODE;
+import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
 import static app.touched.com.touched.Utilities.Constants.USERS_NODE;
 import static app.touched.com.touched.Utilities.TimeUtils.getUniqueTime;
 
@@ -82,6 +78,7 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
     CircleImageView userImage;
     Uri selectedImageURI;
     UploadTask uploadTask;
+    Bitmap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +143,16 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
         });
         userName.setText(Utility.getFullName(myFriend));
 
+        // check for the current users msg count and if it is less then 3 then check for
+        // is they have more than 3 msgs then update the count and make that user old user
+        if (!myDetails.getMsg_count().equals("3")) {
+            if (messageModelArrayList.size() >= 3) {
+                Map<String, Object> childUpdate = new HashMap<>();
+                childUpdate.put(USERS_Details_NODE + "/" + myDetails.getKey() + "/" + MSG_COUNT_NODE, "3");
+                dbToRootNode.updateChildren(childUpdate);
+            }
+        }
+
     }
 
     private ChildEventListener friendMsgCallback = new ChildEventListener() {
@@ -162,6 +169,7 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                         data.setIsSent("true");
                         data.setSentTime(TimeUtils.getCurrentDateTime());
                         messagingAdapter.notifyItemChanged(i);
+                        messagingAdapter.notifyDataSetChanged();
                         break;
                         // now update image status of this msg
                     }
@@ -199,11 +207,12 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                 getMsg.setMine(false);
                 messageModelArrayList.add(0, getMsg);
                 messagingAdapter.notifyItemInserted(0);
-                MessageDeliveryModel deliverReport = new MessageDeliveryModel();
-                deliverReport.setIsDelivered("true");
-                deliverReport.setDeliveredTime(TimeUtils.getCurrentDateTime());
-                dbToMyNode.child(getMsg.getMsg_id()).setValue(deliverReport);
-                dbToFriendNode.child(getMsg.getMsg_id()).setValue(deliverReport);
+                messagingAdapter.notifyDataSetChanged();
+                Map<String, Object> childUpdate = new HashMap<>();
+                childUpdate.put("isDelivered", "true");
+                childUpdate.put("deliveredTime", TimeUtils.getCurrentDateTime());
+                dbToMyNode.child(getMsg.getMsg_id()).updateChildren(childUpdate);
+                dbToFriendNode.child(getMsg.getMsg_id()).updateChildren(childUpdate);
             }
             // as msg get need to send the status of delivery to firebase
             // change value in frnd data
@@ -260,10 +269,15 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                 if (takePicture.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(takePicture, CAPTURE_IMAGE_REQ_CODE);
                 }
+                fl_attachment.setVisibility(View.GONE);
                 break;
             case R.id.imv_gallery:
                 Intent galleryPicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryPicture, GALLERY_IMAGE_REQ_CODE);
+                fl_attachment.setVisibility(View.GONE);
+                break;
+            default:
+                fl_attachment.setVisibility(View.GONE);
                 break;
 
         }
@@ -287,10 +301,14 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
                 selectedImageURI = Uri.fromFile(destination);// file
-//                Bitmap bitmap = Utility.decodeUri(this, uri);//bitmap
+
+                //   map = Utility.decodeUri(this, selectedImageURI);//bitmap
                 MessageModel msgModel = new MessageModel(myDetails.getFirst_name(), myDetails.getEmail(), TimeUtils.getCurrentDateTime(), "true", MessagingType.IMAGE.toString(), null, getUniqueTime(), true);
+                msgModel.setLocalUri(selectedImageURI.getPath());
                 messageModelArrayList.add(0, msgModel);
                 messagingAdapter.notifyItemInserted(0);
+                messagingAdapter.notifyDataSetChanged();
+
                 uploadImage(msgModel);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -310,14 +328,29 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                 }
                 File file = new File(realPath);
                 selectedImageURI = Uri.fromFile(file);
+                // map = Utility.decodeUri(this, selectedImageURI);//bitmap
                 MessageModel msgModel = new MessageModel(myDetails.getFirst_name(), myDetails.getEmail(), TimeUtils.getCurrentDateTime(), "true", MessagingType.IMAGE.toString(), null, getUniqueTime(), true);
+                msgModel.setLocalUri(realPath);
                 messageModelArrayList.add(0, msgModel);
                 messagingAdapter.notifyItemInserted(0);
+                messagingAdapter.notifyDataSetChanged();
                 uploadImage(msgModel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void saveOnMyMessageList(MessageModel msg) {
+        MessageModel data = new MessageModel();
+        data.setMsg_id(myFriend.getKey());
+        data.setMsgContent(msg.getMsgContent());
+        data.setIsSent(msg.getIsSent());
+        data.setSentTime(msg.getSentTime());
+        data.setIsDelivered(msg.getIsDelivered());
+        data.setDeliveredTime(msg.getDeliveredTime());
+        data.setIsMetaData(msg.getIsMetaData());
+        dbToRootNode.child(getString(R.string.MYMESSAGESTAG)).child(myFriend.getKey()).setValue(data);
     }
 
     @Override
@@ -335,6 +368,7 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
         dbToFriendNode.child(id).setValue(msg);
         messageModelArrayList.add(0, msg);
         messagingAdapter.notifyItemInserted(0);
+        saveOnMyMessageList(msg);
     }
 
     @Override
@@ -367,11 +401,17 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
     //https://code.tutsplus.com/courses/use-firebase-as-the-back-end
     @Override
     public void uploadImage(final MessageModel msg) {
+        saveOnMyMessageList(msg);
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("image/jpeg")
                 .setCustomMetadata(META_NO, msg.getMeta_no())
                 .build();
-        uploadTask = storageReference.child(selectedImageURI.getLastPathSegment()).putFile(selectedImageURI, metadata);
+        int maxBufferSize = 1 * 1024 * 1024;
+        File sourceFile = new File(selectedImageURI.getPath());
+
+        if (sourceFile.length() / maxBufferSize >= 1)
+            sourceFile = CompressFile.getCompressedImageFile(sourceFile, getApplicationContext());
+        uploadTask = storageReference.child(Uri.fromFile(sourceFile).getLastPathSegment()).putFile(Uri.fromFile(sourceFile), metadata);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -381,6 +421,8 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                     if (data.getMeta_no().equals(msg.getMeta_no())) {
                         data.setIsSent("false");
                         messagingAdapter.notifyItemChanged(i);
+                        messagingAdapter.notifyDataSetChanged();
+                        saveOnMyMessageList(msg);
                         break;
                         // now update image status of this msg
                     }
@@ -406,11 +448,17 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                             dbToMyNode.child(id).setValue(data);
                             dbToFriendNode.child(id).setValue(data);
                             messagingAdapter.notifyItemChanged(i);
+                            saveOnMyMessageList(msg);
                             break;
                             // now update image status of this msg
                         }
                     }
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
             }
         });
     }

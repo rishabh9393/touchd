@@ -240,7 +240,7 @@ public class ExploreFragment extends Fragment {
                     } else {
                         dbToCollectExploreData.removeEventListener(userDetailsListner);
 
-                        mAdapter.filterByWork(full_user_details, myDetails.getWork().getDescription());
+                        mAdapter.filterByWork(full_user_details, myDetails.getWork().get(0).getDescription());
                     }
                     break;
             }

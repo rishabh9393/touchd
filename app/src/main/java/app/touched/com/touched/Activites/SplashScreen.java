@@ -67,9 +67,16 @@ public class SplashScreen extends AppCompatActivity {
             if (profileUsersDetail != null) {
 
                 ((MainApplicationClass) SplashScreen.this.getApplication()).setProfileUsersDetail(profileUsersDetail);
-                Intent i = new Intent(SplashScreen.this, MainActivity.class);
-                startActivity(i);
-// ask  them how many developers you have for android, i dont want to work alone. in the single project
+                if (profileUsersDetail.getEducation() != null || profileUsersDetail.getWork() != null) {
+
+                    startActivity(new Intent(SplashScreen.this, MainActivity.class));
+
+                } else {
+                    startActivity(new Intent(SplashScreen.this, FeedMoreDetails.class));
+
+                }
+//                Intent i = new Intent(SplashScreen.this, MainActivity.class);
+//                startActivity(i);
                 finish();
 
             } else {

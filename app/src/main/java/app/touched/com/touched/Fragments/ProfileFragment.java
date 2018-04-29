@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     Activity context;
     RecyclerView recyclerViewInterests, recyclerViewPhotos;
     String OtherProfile;
-    LinearLayout femaleLayout, maleLayout;
+    LinearLayout femaleLayout, maleLayout, interestsLayout, photosLayout;
     Bundle data;
     ImageView imvMaleMsg, imvFemaleMsg, imvMalePoke, imvFemalePoke;
     FrameLayout frameContainer;
@@ -72,6 +72,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         frameContainer = (FrameLayout) v.findViewById(R.id.frame_container);
         femaleLayout = (LinearLayout) v.findViewById(R.id.llyFemaleType);
+        interestsLayout = (LinearLayout) v.findViewById(R.id.lly_interests);
+        photosLayout = (LinearLayout) v.findViewById(R.id.lly_photos);
         maleLayout = (LinearLayout) v.findViewById(R.id.llyMaleType);
         recyclerViewInterests = (RecyclerView) v.findViewById(R.id.recycleView);
         recyclerViewPhotos = (RecyclerView) v.findViewById(R.id.recycleViewGallery);
@@ -135,15 +137,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         myName.setText(profileUsersDetail.getFirst_name() + " " + profileUsersDetail.getLast_name());
         myAge.setText(String.valueOf(profileUsersDetail.getAge()));
         myLocation.setText(profileUsersDetail.getLocation() != null ? profileUsersDetail.getLocation().getName() : "");
-        myPosition.setText(profileUsersDetail.getWork() != null ? profileUsersDetail.getWork().getDescription() : "");
+        myPosition.setText(profileUsersDetail.getWork() != null ? profileUsersDetail.getWork().get(0).getDescription() : "");
         myCityRanking.setText(profileUsersDetail.getRanking());
         myOverRanking.setText(profileUsersDetail.getRanking());
         myStatus.setText(profileUsersDetail.getAbout() != null ? profileUsersDetail.getAbout() : getResources().getString(R.string.about_us));
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(view.getContext(), 3);
         recyclerViewInterests.setLayoutManager(mLayoutManager);
         recyclerViewInterests.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.Adapter mAdapterInterests = new InterestAdapter(getActivity(), profileUsersDetail.getLikes().getData());
-        recyclerViewInterests.setAdapter(mAdapterInterests);
+        if(profileUsersDetail.getLikes()!=null) {
+            interestsLayout.setVisibility(View.VISIBLE);
+            RecyclerView.Adapter mAdapterInterests = new InterestAdapter(getActivity(), profileUsersDetail.getLikes().getData());
+            recyclerViewInterests.setAdapter(mAdapterInterests);
+        }
+        else {
+            interestsLayout.setVisibility(View.GONE);
+        }
         RecyclerView.LayoutManager mLayoutManagerGallery = new GridLayoutManager(view.getContext(), 3);
 
         recyclerViewPhotos.setLayoutManager(mLayoutManagerGallery);

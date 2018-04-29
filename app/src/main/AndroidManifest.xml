@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="app.touched.com.touched">
-
+<uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -72,7 +73,12 @@
         <activity
             android:name=".Activites.MessagingActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activites.FeedMoreDetails"></activity>
+        <activity
+            android:name=".Activites.FeedMoreDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden">
+
+        </activity>
     </application>
 
 </manifest>

@@ -19,11 +19,12 @@ import app.touched.com.touched.R;
 public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.Users_ViewHolder> {
     Context con;
     ArrayList<User_Details.Like> data;
-    public InterestAdapter(Context context, ArrayList<User_Details.Like> interestData)
-    {
-        con=context;
-        data=interestData;
+
+    public InterestAdapter(Context context, ArrayList<User_Details.Like> interestData) {
+        con = context;
+        data = interestData;
     }
+
     @Override
     public Users_ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.interests_layout, parent, false);
@@ -33,7 +34,7 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.Users_
 
     @Override
     public void onBindViewHolder(Users_ViewHolder holder, int position) {
-holder.interestName.setText(data.get(position).getName());
+        holder.interestName.setText(data.get(position).getName());
     }
 
     @Override
@@ -43,9 +44,10 @@ holder.interestName.setText(data.get(position).getName());
 
     public class Users_ViewHolder extends RecyclerView.ViewHolder {
         TextView interestName;
+
         public Users_ViewHolder(View itemView) {
             super(itemView);
-            interestName=(TextView)itemView.findViewById(R.id.txvName);
+            interestName = (TextView) itemView.findViewById(R.id.txvName);
         }
     }
 }

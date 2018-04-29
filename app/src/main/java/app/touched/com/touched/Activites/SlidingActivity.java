@@ -33,8 +33,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
@@ -55,6 +58,8 @@ import app.touched.com.touched.Utilities.LocationManagerUtility;
 import app.touched.com.touched.Utilities.TimeUtils;
 
 import static app.touched.com.touched.Utilities.Constants.SPLASH_SCREEN_NODE;
+import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
+import static app.touched.com.touched.Utilities.Constants.USERS_NODE;
 import static app.touched.com.touched.Utilities.Utility.tryGetValueFromString;
 
 public class SlidingActivity extends AppCompatActivity implements View.OnClickListener {
@@ -69,6 +74,7 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private AccessTokenTracker mFacebookAccessTokenTracker;
     LocationManagerUtility locationManagerUtility;
+    User_Details myDetails = new User_Details();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +92,8 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         };
         addFragment();
         init();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
     }
 
     private void addFragment() {
@@ -211,53 +219,71 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
 
     private void updateUI(final FirebaseUser user) {
         if (user != null) {
-            // login
-            Log.e("user ", user.getUid());
-            ((MainApplicationClass) this.getApplication()).setMyDetails(user);
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture.height(1000),address,birthday,interested_in,likes");
+            // check for user already signed up or not
+            mDatabase.child(USERS_Details_NODE).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.hasChildren()) {
 
-            GraphRequest request = GraphRequest.newMeRequest(
+                        // login
+                        Log.e("user ", user.getUid());
+                        ((MainApplicationClass) getApplication()).setMyDetails(user);
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture.height(1000),address,birthday,interested_in,likes");
 
-                    accessToken,
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject object, GraphResponse response) {
-                            Log.v("LoginActivity", object.toString());
+                        GraphRequest request = GraphRequest.newMeRequest(
 
-                            // Application code
-                            // user_id = object.getString("id");
-                            User_Details user_details = new Gson().fromJson(object.toString(), User_Details.class);
-                            String dob = tryGetValueFromString("birthday", object);
-                            if (dob != null) {
+                                accessToken,
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        Log.v("LoginActivity", object.toString());
 
-                                String[] splitDate = dob.split("/");
-                                String age = TimeUtils.getAge(Integer.parseInt(splitDate[2]), Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[0]));
-                                user_details.setAge(Integer.parseInt(age));
-                            } else {
-                                user_details.setAge(18);
-                            }
-                            user_details.setNo_gifts("0");
-                            user_details.setNo_refunds("0");
-                            user_details.setPoints(0);
-                            if (user_details.getLocation() != null) {
-                                user_details.getLocation().setLatitude(locationManagerUtility.getLatitude());
-                                user_details.getLocation().setLongitude(locationManagerUtility.getLongitude());
-                            } else {
-                                User_Details.Location location = new User_Details.Location();
-                                location.setLongitude(locationManagerUtility.getLongitude());
-                                location.setLatitude(locationManagerUtility.getLatitude());
-                                user_details.setLocation(location);
-                                //get city
-                            }
-                            getPhotosFromTheFb(user_details, user);
+                                        // Application code
+                                        // user_id = object.getString("id");
+                                        User_Details user_details = new Gson().fromJson(object.toString(), User_Details.class);
+                                        String dob = tryGetValueFromString("birthday", object);
+                                        if (dob != null) {
 
-                            // 01/31/1980 format
-                        }
+                                            String[] splitDate = dob.split("/");
+                                            String age = TimeUtils.getAge(Integer.parseInt(splitDate[2]), Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[0]));
+                                            user_details.setAge(Integer.parseInt(age));
+                                        } else {
+                                            user_details.setAge(18);
+                                        }
+                                        user_details.setNo_gifts("0");
+                                        user_details.setNo_refunds("0");
+                                        user_details.setPoints(0);
+                                        if (user_details.getLocation() != null) {
+                                            user_details.getLocation().setLatitude(locationManagerUtility.getLatitude());
+                                            user_details.getLocation().setLongitude(locationManagerUtility.getLongitude());
+                                        } else {
+                                            User_Details.Location location = new User_Details.Location();
+                                            location.setLongitude(locationManagerUtility.getLongitude());
+                                            location.setLatitude(locationManagerUtility.getLatitude());
+                                            user_details.setLocation(location);
+                                            //get city
+                                        }
+                                        getPhotosFromTheFb(user_details, user);
 
-                    });
-            request.setParameters(parameters);
-            request.executeAsync();
+                                        // 01/31/1980 format
+                                    }
+
+                                });
+                        request.setParameters(parameters);
+                        request.executeAsync();
+                    } else {
+                        myDetails = dataSnapshot.getValue(User_Details.class);
+                        callPage();
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         } else {
             DialogsUtils.hideProgressDialog();
         }
@@ -288,7 +314,6 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void uploadUserDetailsToDB(final User_Details user_details, FirebaseUser firebaseUser) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         Log.e("access token", accessToken.getUserId());
         // Log.e("user id", user_details.getUser_id());
         user_details.setKey(firebaseUser.getUid());
@@ -300,21 +325,36 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + Constants.USERS_Details_NODE + "/" + firebaseUser.getUid(), user_details);
         childUpdates.put("/" + Constants.USERS_NODE + "/" + firebaseUser.getUid(), users);
-
-        mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isComplete()) {
-                    ((MainApplicationClass) getApplication()).setProfileUsersDetail(user_details);
-
-                    DialogsUtils.hideProgressDialog();
-                    startActivity(new Intent(SlidingActivity.this, MainActivity.class));
-                    finish();
-                }
-            }
-        });
+        myDetails = user_details;
+        mDatabase.updateChildren(childUpdates).addOnCompleteListener(signupUserDataCallBack);
         // Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
 
+
+    }
+
+    OnCompleteListener signupUserDataCallBack = new OnCompleteListener() {
+        @Override
+        public void onComplete(@NonNull Task task) {
+            //mDatabase.(signupUserDataCallBack);
+            callPage();
+        }
+    };
+
+    private void callPage() {
+        if (myDetails != null) {
+            ((MainApplicationClass) getApplication()).setProfileUsersDetail(myDetails);
+            DialogsUtils.hideProgressDialog();
+
+            if (myDetails.getEducation() != null || myDetails.getWork() != null) {
+
+                startActivity(new Intent(SlidingActivity.this, MainActivity.class));
+
+            } else {
+                startActivity(new Intent(SlidingActivity.this, FeedMoreDetails.class));
+
+            }
+            finish();
+        }
 
     }
 }

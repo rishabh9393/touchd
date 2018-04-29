@@ -210,7 +210,7 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ArrayList<User_Details> filerlist = new ArrayList<>();
 
         for (User_Details data : list) {
-            if (data.getWork().getDescription().equals(myWork))
+            if (data.getWork().get(0).getDescription().equals(myWork))
                 filerlist.add(data);
 
         }

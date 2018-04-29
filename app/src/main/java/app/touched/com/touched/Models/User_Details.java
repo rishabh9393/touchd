@@ -567,7 +567,8 @@ public class User_Details implements Parcelable {
         };
     }
 
-    public static class Like {
+    public static class Like implements Parcelable {
+
         private String name;
         private String id;
 
@@ -586,9 +587,41 @@ public class User_Details implements Parcelable {
         public void setId(String id) {
             this.id = id;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.name);
+            dest.writeString(this.id);
+        }
+
+        public Like() {
+        }
+
+        protected Like(Parcel in) {
+            this.name = in.readString();
+            this.id = in.readString();
+        }
+
+        public static final Creator<Like> CREATOR = new Creator<Like>() {
+            @Override
+            public Like createFromParcel(Parcel source) {
+                return new Like(source);
+            }
+
+            @Override
+            public Like[] newArray(int size) {
+                return new Like[size];
+            }
+        };
     }
 
-    public static class LikeList {
+    public static class LikeList implements Parcelable {
+
         ArrayList<Like> data;
 
         public ArrayList<Like> getData() {
@@ -598,6 +631,43 @@ public class User_Details implements Parcelable {
         public void setData(ArrayList<Like> data) {
             this.data = data;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeTypedList(this.data);
+        }
+
+        public LikeList() {
+        }
+
+        protected LikeList(Parcel in) {
+            this.data = in.createTypedArrayList(Like.CREATOR);
+        }
+
+        public static final Creator<LikeList> CREATOR = new Creator<LikeList>() {
+            @Override
+            public LikeList createFromParcel(Parcel source) {
+                return new LikeList(source);
+            }
+
+            @Override
+            public LikeList[] newArray(int size) {
+                return new LikeList[size];
+            }
+        };
+    }
+
+    public List<Work> getWork() {
+        return work;
+    }
+
+    public void setWork(List<Work> work) {
+        this.work = work;
     }
 
     private String is_login;
@@ -616,7 +686,7 @@ public class User_Details implements Parcelable {
     private List<Education> education;
     private Location location;
     private Picture picture;
-    private Work work;
+    private List<Work> work;
     private String no_gifts;
     private String no_refunds;
     private String balance;
@@ -699,15 +769,6 @@ public class User_Details implements Parcelable {
 
     public void setPoints(Integer points) {
         this.points = points;
-    }
-
-
-    public Work getWork() {
-        return work;
-    }
-
-    public void setWork(Work work) {
-        this.work = work;
     }
 
 
@@ -863,13 +924,14 @@ public class User_Details implements Parcelable {
         dest.writeTypedList(this.education);
         dest.writeParcelable(this.location, flags);
         dest.writeParcelable(this.picture, flags);
-        dest.writeParcelable(this.work, flags);
+        dest.writeTypedList(this.work);
         dest.writeString(this.no_gifts);
         dest.writeString(this.no_refunds);
         dest.writeString(this.balance);
         dest.writeParcelable(this.photos, flags);
         dest.writeString(this.msg_count);
         dest.writeString(this.key);
+        dest.writeParcelable(this.likes, flags);
     }
 
     protected User_Details(Parcel in) {
@@ -889,13 +951,14 @@ public class User_Details implements Parcelable {
         this.education = in.createTypedArrayList(Education.CREATOR);
         this.location = in.readParcelable(Location.class.getClassLoader());
         this.picture = in.readParcelable(Picture.class.getClassLoader());
-        this.work = in.readParcelable(Work.class.getClassLoader());
+        this.work = in.createTypedArrayList(Work.CREATOR);
         this.no_gifts = in.readString();
         this.no_refunds = in.readString();
         this.balance = in.readString();
         this.photos = in.readParcelable(Fb_Photos.class.getClassLoader());
         this.msg_count = in.readString();
         this.key = in.readString();
+        this.likes = in.readParcelable(LikeList.class.getClassLoader());
     }
 
     public static final Creator<User_Details> CREATOR = new Creator<User_Details>() {
