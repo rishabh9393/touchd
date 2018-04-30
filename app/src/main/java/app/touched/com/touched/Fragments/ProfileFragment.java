@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -141,8 +142,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         myCityRanking.setText(profileUsersDetail.getRanking());
         myOverRanking.setText(profileUsersDetail.getRanking());
         myStatus.setText(profileUsersDetail.getAbout() != null ? profileUsersDetail.getAbout() : getResources().getString(R.string.about_us));
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(view.getContext(), 3);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(view.getContext(), 1);
         recyclerViewInterests.setLayoutManager(mLayoutManager);
+        recyclerViewInterests.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
         recyclerViewInterests.setItemAnimator(new DefaultItemAnimator());
         if(profileUsersDetail.getLikes()!=null) {
             interestsLayout.setVisibility(View.VISIBLE);

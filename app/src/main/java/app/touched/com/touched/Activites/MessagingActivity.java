@@ -368,6 +368,7 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
         dbToFriendNode.child(id).setValue(msg);
         messageModelArrayList.add(0, msg);
         messagingAdapter.notifyItemInserted(0);
+        messagingAdapter.notifyDataSetChanged();
         saveOnMyMessageList(msg);
     }
 
