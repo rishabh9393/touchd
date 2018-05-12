@@ -39,18 +39,18 @@ public class SliderImagesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //Collections.addAll(ImagesArray,IMAGES);
-        View v=inflater.inflate(R.layout.fragment_slider_images, container, false);
+        View v = inflater.inflate(R.layout.fragment_slider_images, container, false);
         for (int i = 0; i < IMAGES.length; i++)
             ImagesArray.add(IMAGES[i]);
 
         mPager = (ViewPager) v.findViewById(R.id.pager);
 
-mPager.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
+        mPager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    }
-});
+            }
+        });
         mPager.setAdapter(new SlidingImage_Adapter(container.getContext(), ImagesArray));
 
 
@@ -99,7 +99,7 @@ mPager.setOnClickListener(new View.OnClickListener() {
 
             }
         });
-        return  v;
+        return v;
     }
 
 }

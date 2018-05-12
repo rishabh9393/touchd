@@ -6,9 +6,15 @@
     tools:context="app.touched.com.touched.Fragments.MessageFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <include
+        layout="@layout/no_data_found_heart_layout"
+        android:visibility="gone" />
 
 </FrameLayout>

@@ -37,6 +37,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -57,9 +58,11 @@ import app.touched.com.touched.Utilities.DialogsUtils;
 import app.touched.com.touched.Utilities.LocationManagerUtility;
 import app.touched.com.touched.Utilities.TimeUtils;
 
+import static app.touched.com.touched.Utilities.Constants.LAST_ONLINE_TIME_NODE;
 import static app.touched.com.touched.Utilities.Constants.SPLASH_SCREEN_NODE;
 import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
 import static app.touched.com.touched.Utilities.Constants.USERS_NODE;
+import static app.touched.com.touched.Utilities.Constants.USER_LAST_LOGIN_TIME_NODE;
 import static app.touched.com.touched.Utilities.Utility.tryGetValueFromString;
 
 public class SlidingActivity extends AppCompatActivity implements View.OnClickListener {
@@ -87,9 +90,10 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         mFacebookAccessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                handleFacebookAccessToken(currentAccessToken);
+                //  handleFacebookAccessToken(currentAccessToken);
             }
         };
+        accessToken = AccessToken.getCurrentAccessToken();
         addFragment();
         init();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -128,10 +132,15 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                ((MainApplicationClass) getApplication()).setAccessToken(loginResult.getAccessToken());
-                accessToken = loginResult.getAccessToken();
+                if (accessToken == null) {
+                    ((MainApplicationClass) getApplication()).setAccessToken(loginResult.getAccessToken());
+                    accessToken = loginResult.getAccessToken();
+                } else {
+                    ((MainApplicationClass) getApplication()).setAccessToken(accessToken);
+
+                }
                 Log.d("", "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
+                handleFacebookAccessToken(accessToken);
 
 // photos{album,from,icon,id,updated_time,images,link,name,height}
 // interested_in,birthday,favorite_athletes,favorite_teams,inspirational_people,sports
@@ -223,13 +232,14 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
             mDatabase.child(USERS_Details_NODE).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    ((MainApplicationClass) getApplication()).setMyDetails(user);
                     if (!dataSnapshot.hasChildren()) {
 
                         // login
                         Log.e("user ", user.getUid());
                         ((MainApplicationClass) getApplication()).setMyDetails(user);
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture.height(1000),address,birthday,interested_in,likes");
+                        parameters.putString("fields", "id,email,first_name,gender,last_name,location,about,picture.height(1000),address,birthday,interested_in,likes{id,name,picture.height(100)}");
 
                         GraphRequest request = GraphRequest.newMeRequest(
 
@@ -274,7 +284,45 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
                         request.executeAsync();
                     } else {
                         myDetails = dataSnapshot.getValue(User_Details.class);
-                        callPage();
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "location,picture.height(1000),interested_in,likes{id,name,picture.height(100)}");
+
+                        GraphRequest request = GraphRequest.newMeRequest(
+
+                                accessToken,
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        Log.v("LoginActivity", object.toString());
+                                        User_Details user_details = new Gson().fromJson(object.toString(), User_Details.class);
+                                        Map<String, Object> childUpdate = new HashMap<>();
+                                        if (user_details.getLocation() != null) {
+                                            user_details.getLocation().setLatitude(locationManagerUtility.getLatitude());
+                                            user_details.getLocation().setLongitude(locationManagerUtility.getLongitude());
+                                        } else {
+                                            User_Details.Location location = new User_Details.Location();
+                                            location.setLongitude(locationManagerUtility.getLongitude());
+                                            location.setLatitude(locationManagerUtility.getLatitude());
+                                            user_details.setLocation(location);
+                                            //get city
+                                        }
+                                        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + user.getUid() + "/location", user_details.getLocation());
+                                        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + user.getUid() + "/picture", user_details.getPicture());
+                                        if (user_details.getLikes() != null)
+                                            childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + user.getUid() + "/likes", user_details.getLikes());
+                                        mDatabase.updateChildren(childUpdate);
+
+                                        myDetails.setLocation(user_details.getLocation());
+                                        myDetails.setPicture(user_details.getPicture());
+                                        if (user_details.getLikes() != null)
+                                            myDetails.setLikes(user_details.getLikes());
+                                        callPage();
+                                    }
+                                });
+                        request.setParameters(parameters);
+                        request.executeAsync();
+
+
                     }
 
                 }
@@ -320,11 +368,13 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
         Users users = new Users(user_details.getId(), user_details.getEmail(), TimeUtils.getCurrentDateTime(), "true", TimeUtils.getCurrentDateTime());
         users.setGifts_counts("0");
         users.setRefund_amount("0");
+        users.setLast_online_time(TimeUtils.getCurrentDateTime());
         user_details.setIs_login("true");
         user_details.setMsg_count("0");
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + Constants.USERS_Details_NODE + "/" + firebaseUser.getUid(), user_details);
         childUpdates.put("/" + Constants.USERS_NODE + "/" + firebaseUser.getUid(), users);
+
         myDetails = user_details;
         mDatabase.updateChildren(childUpdates).addOnCompleteListener(signupUserDataCallBack);
         // Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
@@ -347,10 +397,10 @@ public class SlidingActivity extends AppCompatActivity implements View.OnClickLi
 
             if (myDetails.getEducation() != null || myDetails.getWork() != null) {
 
-                startActivity(new Intent(SlidingActivity.this, MainActivity.class));
+                startActivity(new Intent(SlidingActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
             } else {
-                startActivity(new Intent(SlidingActivity.this, FeedMoreDetails.class));
+                startActivity(new Intent(SlidingActivity.this, FeedMoreDetails.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
 
             }
             finish();

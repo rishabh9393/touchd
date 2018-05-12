@@ -9,9 +9,9 @@ public class Users {
     private String push_token;
     private String emailId;
     private String last_login_time;
-
+    private String is_login;
     private String last_online_time;
-     private String gifts_counts;
+    private String gifts_counts;
 
     public String getGifts_counts() {
         return gifts_counts;
@@ -34,11 +34,19 @@ public class Users {
     public Users() {
     }
 
+    public String getIs_login() {
+        return is_login;
+    }
+
+    public void setIs_login(String is_login) {
+        this.is_login = is_login;
+    }
+
     public Users(String user_id, String emailId, String last_login_time, String is_login, String last_online_time) {
         this.user_id = user_id;
         this.emailId = emailId;
         this.last_login_time = last_login_time;
-
+        this.is_login = is_login;
         this.last_online_time = last_online_time;
     }
 
@@ -75,7 +83,6 @@ public class Users {
     }
 
 
-
     public String getLast_online_time() {
         return last_online_time;
     }
@@ -84,4 +91,4 @@ public class Users {
         this.last_online_time = last_online_time;
     }
 
-   }
+}

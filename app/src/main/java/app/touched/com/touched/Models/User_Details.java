@@ -278,6 +278,22 @@ public class User_Details implements Parcelable {
         }
 
         @Override
+        public boolean equals(Object obj) {
+            boolean result = false;
+            if (obj == null || obj.getClass() != getClass()) {
+                result = false;
+            } else if (obj instanceof Education) {
+                Education employee = (Education) obj;
+                if (this.school.getName().equals(employee.getSchool().getName())) {
+                    result = true;
+                }
+            } else {
+                return super.equals(obj);
+            }
+            return result;
+        }
+
+        @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.id);
             dest.writeString(this.type);
@@ -532,6 +548,22 @@ public class User_Details implements Parcelable {
         }
 
         @Override
+        public boolean equals(Object obj) {
+            boolean result = false;
+            if (obj == null || obj.getClass() != getClass()) {
+                result = false;
+            } else if (obj instanceof Work) {
+                Work employee = (Work) obj;
+                if (this.description.equals(employee.getDescription())) {
+                    result = true;
+                }
+            } else {
+                return super.equals(obj);
+            }
+            return result;
+        }
+
+        @Override
         public int describeContents() {
             return 0;
         }
@@ -568,7 +600,7 @@ public class User_Details implements Parcelable {
     }
 
     public static class Like implements Parcelable {
-
+        private Picture picture;
         private String name;
         private String id;
 
@@ -588,6 +620,17 @@ public class User_Details implements Parcelable {
             this.id = id;
         }
 
+        public Picture getPicture() {
+            return picture;
+        }
+
+        public void setPicture(Picture picture) {
+            this.picture = picture;
+        }
+
+        public Like() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -595,14 +638,13 @@ public class User_Details implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.picture, flags);
             dest.writeString(this.name);
             dest.writeString(this.id);
         }
 
-        public Like() {
-        }
-
         protected Like(Parcel in) {
+            this.picture = in.readParcelable(Picture.class.getClassLoader());
             this.name = in.readString();
             this.id = in.readString();
         }
@@ -892,11 +934,13 @@ public class User_Details implements Parcelable {
         boolean result = false;
         if (obj == null || obj.getClass() != getClass()) {
             result = false;
-        } else {
+        } else if (obj instanceof User_Details) {
             User_Details employee = (User_Details) obj;
-            if (this.id.equals(employee.getId())) {
+            if (this.key.equals(employee.getKey())) {
                 result = true;
             }
+        } else {
+            return super.equals(obj);
         }
         return result;
     }

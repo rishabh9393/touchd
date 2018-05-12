@@ -12,6 +12,9 @@ import android.os.Environment;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import app.touched.com.touched.R;
 
@@ -20,6 +23,45 @@ import app.touched.com.touched.R;
  */
 
 public class CompressFile {
+    public static String myStoragePath(Context context)
+    {
+        File folder = new File(Environment.getExternalStorageDirectory() +"/"+context.getResources().getString(R.string.app_name));
+        if (!folder.exists()) {
+          folder.mkdir();
+        }
+        return folder.getAbsolutePath();
+    }
+    public static Boolean checkForImageStatus(Context context,String imageFileName)
+    {
+        File folder = new File(Environment.getExternalStorageDirectory() +"/"+context.getResources().getString(R.string.app_name));
+        if (folder.exists()) {
+            File newFile = new File(new File(folder.getAbsolutePath()), imageFileName);
+            if (newFile.exists()) {
+               return true;
+            }
+        }
+        return false;
+    }
+    public static File createImageFile(Context activity)throws IOException {
+        String timeStamp=new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName="IMG_"+timeStamp+"_.jpg";
+
+
+        File folder = new File(Environment.getExternalStorageDirectory() +"/"+activity.getResources().getString(R.string.app_name));
+        boolean success = true;
+        if (!folder.exists()) {
+            success = folder.mkdir();
+        }
+        if (success) {
+            File newFile = new File(new File(folder.getAbsolutePath()), imageFileName);
+            if (newFile.exists()) {
+                newFile.delete();
+            }
+            return newFile;
+        }
+
+        return File.createTempFile(imageFileName,".jpg",folder);
+    }
     public static File getCompressedImageFile(File file, Context mContext) {
         try {
             BitmapFactory.Options o = new BitmapFactory.Options();

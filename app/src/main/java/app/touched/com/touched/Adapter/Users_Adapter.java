@@ -206,12 +206,17 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         addAll(filerlist);
     }
 
-    public void filterByWork(ArrayList<User_Details> list, String myWork) {
+    public void filterByWork(ArrayList<User_Details> list, List<User_Details.Work> myWork) {
         ArrayList<User_Details> filerlist = new ArrayList<>();
 
         for (User_Details data : list) {
-            if (data.getWork().get(0).getDescription().equals(myWork))
-                filerlist.add(data);
+            for (User_Details.Work work : myWork) {
+                if (data.getWork().contains(work)) {
+                    filerlist.add(data);
+                    break;
+                }
+
+            }
 
         }
 
@@ -224,13 +229,16 @@ public class Users_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         addAll(list);
     }
 
-    public void filterByEducation(ArrayList<User_Details> list, String myEdu) {
+    public void filterByEducation(ArrayList<User_Details> list, List<User_Details.Education> myEdu) {
         ArrayList<User_Details> filerlist = new ArrayList<>();
 
         for (User_Details data : list) {
-            if (data.getEducation().get(0).getSchool().getName().equals(myEdu))
-                filerlist.add(data);
-
+            for(User_Details.Education education:myEdu) {
+                if (data.getEducation().contains(education)) {
+                    filerlist.add(data);
+                    break;
+                }
+            }
         }
     }
 

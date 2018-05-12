@@ -26,5 +26,7 @@
     <string name="add_more">Add more</string>
     <string name="fb_note_signup">We keep only facebook verified genuine prfiles in the community. Please contribute to us and give us exact details for a seamless experience in the app</string>
     <string name="MYMESSAGESTAG">my_messages</string>
+    <string name="no_data_heart">So sad you didn\'t find your soulmate yet. Start expressing you feeling by sharing Gifts and start chat</string>
+    <string name="poke_msg">I have sent you a touch. Send Gift to start talking</string>
 
 </resources>

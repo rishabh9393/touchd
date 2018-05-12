@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,8 @@ import app.touched.com.touched.Utilities.TimeUtils;
 
 import static app.touched.com.touched.Utilities.Constants.IS_LOGIN_NODE;
 import static app.touched.com.touched.Utilities.Constants.LAST_ONLINE_TIME_NODE;
-import static app.touched.com.touched.Utilities.Constants.USER_LAST_ONLINE_TIME_NODE;
+import static app.touched.com.touched.Utilities.Constants.USERS_NODE;
+
 
 /**
  * Created by Anshul on 2/24/2018.
@@ -31,9 +33,6 @@ import static app.touched.com.touched.Utilities.Constants.USER_LAST_ONLINE_TIME_
 
 public class BaseActivity extends AppCompatActivity {
 
-    private DatabaseReference dbUsers;
-    public FirebaseUser myBasicDetails;
-    public FirebaseAuth mAuth;
 
 
     @Override
@@ -52,30 +51,14 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        mAuth = ((MainApplicationClass) getApplication()).getmAuth();
-        myBasicDetails = ((MainApplicationClass) getApplication()).getMyDetails();
 
-        dbUsers = FirebaseDatabase.getInstance().getReference();
 
-        User_Details users = new User_Details();
-        users.setIs_login("true");
-        Map<String, Object> childUpdate = new HashMap<>();
-        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + myBasicDetails.getUid()+"/"+IS_LOGIN_NODE,users.getIs_login());
 
-        dbUsers.updateChildren(childUpdate);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        User_Details users = new User_Details();
-        users.setIs_login("false");
-        Users us = new Users();
-        us.setLast_online_time(TimeUtils.getCurrentDateTime());
-        Map<String, Object> childUpdate = new HashMap<>();
 
-        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + myBasicDetails.getUid()+"/"+IS_LOGIN_NODE, users.getIs_login());
-        childUpdate.put("/" + Constants.USERS_NODE + "/" + myBasicDetails.getUid()+"/"+LAST_ONLINE_TIME_NODE, us.getLast_login_time());
-        dbUsers.updateChildren(childUpdate);
     }
 }

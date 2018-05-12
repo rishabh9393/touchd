@@ -37,8 +37,8 @@
                 android:layout_toRightOf="@id/imv_img1"
                 android:text="@string/fb_note_signup" />
         </RelativeLayout>
-        <include layout="@layout/gray_border_layout"
-           />
+
+        <include layout="@layout/gray_border_layout" />
 
         <LinearLayout
 
@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:text="Work :" />
+
             <LinearLayout
                 android:id="@+id/dynamicWorkLayout"
                 android:layout_width="match_parent"
@@ -87,11 +88,13 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:text="Education :" />
+
             <LinearLayout
                 android:id="@+id/dynamicEducationLayout"
                 android:layout_width="match_parent"
@@ -114,12 +117,33 @@
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
+        <include layout="@layout/gray_border_layout" />
+
+        <EditText
+            android:id="@+id/edt_aboutMe"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="12dp"
+            android:background="@android:color/white"
+            android:gravity="top"
+            android:hint="About me"
+            android:padding="5dp"
+            android:singleLine="false" />
+
+        <include layout="@layout/gray_border_layout" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+
+            android:text="* Marked fields are compulsory for atleast one entry" />
 
         <Button
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="12dp"
             android:background="@color/colorPrimary"
             android:text="Submit"
 

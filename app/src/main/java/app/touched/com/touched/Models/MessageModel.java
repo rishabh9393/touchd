@@ -13,22 +13,68 @@ public class MessageModel {
         this.meta_no = meta_no;
     }
 
-    private String meta_no,localUri, msg_id, name, senderEmail, timestamp, isRead, isDelivered, deliveredTime, readTime, isSent, SentTime, isMetaData, metaType, msgContent;
+    private String downloadStatus;
+    private String downloadUid;
+    private String meta_no, localUri, msg_id, name, senderEmail, timestamp, isRead, isDelivered, deliveredTime, readTime, isSent, SentTime, isMetaData, metaType, msgContent;
     private boolean isMine;
+    private String thumbImage;
+    private String isRejected;
+    private String timeToExpire;
+
+    public String getIsRejected() {
+        return isRejected;
+    }
+
+    public void setIsRejected(String isRejected) {
+        this.isRejected = isRejected;
+    }
+
+    public String getTimeToExpire() {
+        return timeToExpire;
+    }
+
+    public void setTimeToExpire(String timeToExpire) {
+        this.timeToExpire = timeToExpire;
+    }
 
     public MessageModel() {
 
     }
 
-    public MessageModel(String name, String senderEmail, String timestamp, String isMetaData, String metaType, String msgContent,String meta_no,boolean isMine) {
+
+    public MessageModel(String name, String senderEmail, String timestamp, String isMetaData, String metaType, String msgContent, String meta_no, boolean isMine) {
         this.name = name;
         this.senderEmail = senderEmail;
         this.timestamp = timestamp;
         this.isMetaData = isMetaData;
         this.metaType = metaType;
         this.msgContent = msgContent;
-        this.meta_no=meta_no;
-        this.isMine=isMine;
+        this.meta_no = meta_no;
+        this.isMine = isMine;
+    }
+
+    public String getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public void setDownloadStatus(String downloadStatus) {
+        this.downloadStatus = downloadStatus;
+    }
+
+    public String getDownloadUid() {
+        return downloadUid;
+    }
+
+    public void setDownloadUid(String downloadUid) {
+        this.downloadUid = downloadUid;
+    }
+
+    public String getThumbImage() {
+        return thumbImage;
+    }
+
+    public void setThumbImage(String thumbImage) {
+        this.thumbImage = thumbImage;
     }
 
     public boolean isMine() {
@@ -150,5 +196,21 @@ public class MessageModel {
 
     public void setMsgContent(String msgContent) {
         this.msgContent = msgContent;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (obj == null || obj.getClass() != getClass()) {
+            result = false;
+        } else if (obj instanceof MessageModel) {
+            MessageModel employee = (MessageModel) obj;
+            if (this.msg_id.equals(employee.getMsg_id())) {
+                result = true;
+            }
+        } else {
+            return super.equals(obj);
+        }
+        return result;
     }
 }

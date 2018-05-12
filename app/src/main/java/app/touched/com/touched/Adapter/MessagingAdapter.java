@@ -2,14 +2,8 @@ package app.touched.com.touched.Adapter;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
+import android.app.DownloadManager;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +14,26 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import org.ocpsoft.prettytime.PrettyTime;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
+import app.touched.com.touched.Interfaces.DownloadCallback;
 import app.touched.com.touched.Models.MessageModel;
 import app.touched.com.touched.R;
+import app.touched.com.touched.Utilities.CompressFile;
 import app.touched.com.touched.Utilities.DialogBox;
-import app.touched.com.touched.Utilities.MessagingType;
-import app.touched.com.touched.Utilities.Utility;
+import app.touched.com.touched.Models.MessageStatus;
+import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.view.View.GONE;
 import static app.touched.com.touched.Utilities.Constants.MY_IMAGE_MSG;
 import static app.touched.com.touched.Utilities.Constants.MY_MESSAGE;
@@ -49,10 +49,17 @@ import static app.touched.com.touched.Utilities.Utility.showToastForContentNotAv
 public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.ListViewHolder> {
     private Activity context;
     private ArrayList<MessageModel> chatList;
+    private DownloadManager downloadManager;
+    public DownloadCallback downloadCallback;
+    private String myProfilePic, friendProfilePic;
 
-    public MessagingAdapter(Activity context, ArrayList<MessageModel> list) {
+    public MessagingAdapter(Activity context, ArrayList<MessageModel> list, String myProfilePic, String friendProfilePic, DownloadCallback listener) {
         this.context = context;
         this.chatList = list;
+        downloadCallback = listener;
+        downloadManager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
+        this.myProfilePic = myProfilePic;
+        this.friendProfilePic = friendProfilePic;
     }
 
     @Override
@@ -76,9 +83,33 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
     }
 
     @Override
-    public void onBindViewHolder(final ListViewHolder holder, int position) {
+    public void onBindViewHolder(final ListViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
             case MY_MESSAGE:
+                holder.profileImage.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(myProfilePic).networkPolicy(NetworkPolicy.OFFLINE).into(holder.profileImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(context).load(myProfilePic).into(holder.profileImage);
+                    }
+                });
+                if (position<chatList.size()-1) {
+                    if (chatList.get(position + 1).isMine()) {
+                        holder.profileImage.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.profileImage.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+
+                PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
+                // String ago = prettyTime.format(new Date(chatList.get(position).getTimestamp()));
                 // String myDate = getMsgTime(chatList.get(position).getSentTime());
                 holder.date.setText(getMsgTime(chatList.get(position).getTimestamp()));
                 holder.smsTxt.setText(chatList.get(position).getMsgContent());
@@ -91,14 +122,55 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
                 }
                 break;
             case OTHER_MESSAGE:
+//                PrettyTime prettyTimeO = new PrettyTime(Locale.getDefault());
+//                String ago0 = prettyTimeO.format(new Date(getMsgTime(chatList.get(position).getTimestamp())));
+                holder.profileImage.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(friendProfilePic).networkPolicy(NetworkPolicy.OFFLINE).into(holder.profileImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
 
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(context).load(friendProfilePic).into(holder.profileImage);
+                    }
+                });
+                if (position<chatList.size()-1) {
+                    if (!chatList.get(position + 1).isMine()) {
+                        holder.profileImage.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.profileImage.setVisibility(View.VISIBLE);
+
+                    }
+                }
                 holder.date.setText(getMsgTime(chatList.get(position).getTimestamp()));
                 holder.username.setText(chatList.get(position).getName());
                 holder.smsTxt.setText(chatList.get(position).getMsgContent());
 
                 break;
             case MY_IMAGE_MSG:
-                holder.date.setText(getMsgTime(chatList.get(position).getTimestamp()));
+                holder.profileImage.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(myProfilePic).networkPolicy(NetworkPolicy.OFFLINE).into(holder.profileImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(context).load(myProfilePic).into(holder.profileImage);
+                    }
+                });
+                if (position<chatList.size()-1) {
+                    if (chatList.get(position + 1).isMine()) {
+                        holder.profileImage.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.profileImage.setVisibility(View.VISIBLE);
+
+                    }
+                }
+                holder.date.setText(chatList.get(position).getTimestamp());
                 holder.username.setText(chatList.get(position).getName());
                 if (chatList.get(position).getLocalUri() != null && !chatList.get(position).getLocalUri().isEmpty())
                     holder.image.setImageURI(Uri.parse(chatList.get(position).getLocalUri()));
@@ -121,7 +193,7 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
                         try {
                             if (!chatList.get(holder.getAdapterPosition()).getLocalUri().isEmpty()) {
                                 DialogBox showImage = new DialogBox(context);
-                                showImage.ShowImage(chatList.get(holder.getAdapterPosition()).getLocalUri(),chatList.get(holder.getAdapterPosition()).getMsg_id());
+                                showImage.ShowImage(chatList.get(holder.getAdapterPosition()).getLocalUri(), chatList.get(holder.getAdapterPosition()).getMsg_id());
                             } else {
                                 showToastForContentNotAvailable(context);
                             }
@@ -132,9 +204,102 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
                 });
                 break;
             case OTHER_IMAGE_MSG:
-                holder.date.setText(getMsgTime(chatList.get(position).getSentTime()));
+                holder.profileImage.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(friendProfilePic).networkPolicy(NetworkPolicy.OFFLINE).into(holder.profileImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(context).load(friendProfilePic).into(holder.profileImage);
+                    }
+                });
+                if (position<chatList.size()-1) {
+                    if (!chatList.get(position + 1).isMine()) {
+                        holder.profileImage.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.profileImage.setVisibility(View.VISIBLE);
+
+                    }
+                }
+                holder.date.setText(chatList.get(position).getSentTime());
                 holder.username.setText(chatList.get(position).getName());
-                Picasso.with(context).load(chatList.get(position).getMsgContent()).placeholder(R.drawable.com_facebook_profile_picture_blank_square).networkPolicy(NetworkPolicy.OFFLINE).into(holder.image);
+                holder.progressBar.setVisibility(View.VISIBLE);
+                holder.downloadImage.setVisibility(GONE);
+                if (chatList.get(position).getDownloadStatus() == null) {
+                    Picasso.with(context).load(chatList.get(position).getThumbImage()).placeholder(R.drawable.photo_placeholder).networkPolicy(NetworkPolicy.OFFLINE).into(holder.image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.progressBar.setVisibility(View.GONE);
+                            holder.downloadImage.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso.with(context).load(chatList.get(position).getThumbImage()).placeholder(R.drawable.photo_placeholder).into(holder.image, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    holder.progressBar.setVisibility(View.GONE);
+                                    holder.downloadImage.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onError() {
+                                    holder.progressBar.setVisibility(View.GONE);
+                                    holder.downloadImage.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
+                    });
+                } else if (chatList.get(position).getDownloadStatus().equals(MessageStatus.PROGRESS.toString())) {
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                    holder.downloadImage.setVisibility(View.GONE);
+                } else if (chatList.get(position).getDownloadStatus().equals(MessageStatus.DOWNLOADED.toString())) {
+                    holder.progressBar.setVisibility(View.GONE);
+                    holder.downloadImage.setVisibility(View.GONE);
+                    if (CompressFile.checkForImageStatus(context, chatList.get(position).getMeta_no()))
+                        holder.image.setImageURI(Uri.parse(CompressFile.myStoragePath(context) + "/" + chatList.get(position).getMeta_no()));
+                    else {// else means user deleted the image
+                        holder.image.setImageResource(R.drawable.photo_placeholder);
+
+                        chatList.get(position).setDownloadStatus(MessageStatus.REMOVED.toString());
+                    }
+
+
+                } else {
+                    holder.progressBar.setVisibility(View.GONE);
+                    holder.downloadImage.setVisibility(View.GONE);
+                }
+                holder.downloadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        holder.progressBar.setVisibility(View.VISIBLE);
+                        Uri downloadReference = Uri.parse(chatList.get(position).getMsgContent());
+                        DownloadManager.Request request = new DownloadManager.Request(downloadReference);
+
+                        //Restrict the types of networks over which this download may proceed.
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                        //Set whether this download may proceed over a roaming connection.
+                        request.setAllowedOverRoaming(true);
+                        //Set the title of this download, to be displayed in notifications (if enabled).
+                        request.setTitle(context.getString(R.string.app_name));
+                        //Set a description of this download, to be displayed in notifications (if enabled)
+//                        request.setDescription("Android Data download using DownloadManager.");
+                        //Set the local destination for the downloaded file to a path within the application's external files directory
+
+                        request.setDestinationInExternalPublicDir(context.getString(R.string.app_name), chatList.get(position).getMeta_no());
+
+
+                        //Enqueue a new download and same the referenceId
+                        long downloadId = downloadManager.enqueue(request);
+                        downloadCallback.downloadStartSetValue(position, downloadId, chatList.get(position));
+
+
+                    }
+                });
 //                if(oneTimearraylist.contains(chatList.get(position).getSms())){
 //                    holder.progressBar.setVisibility(View.VISIBLE);
 //                    holder.downloadImage.setVisibility(GONE);
@@ -220,11 +385,15 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
                     @Override
                     public void onClick(View v) {
                         try {
-                            if (chatList.get(holder.getAdapterPosition()).getLocalUri() != null || !chatList.get(holder.getAdapterPosition()).getLocalUri().equals("")) {
-                                DialogBox showImage = new DialogBox(context);
-                                showImage.ShowImage(chatList.get(holder.getAdapterPosition()).getLocalUri(),chatList.get(holder.getAdapterPosition()).getMsg_id());
+                            if (!chatList.get(holder.getAdapterPosition()).getDownloadStatus().equals(MessageStatus.REMOVED.toString())) {
+                                if (chatList.get(holder.getAdapterPosition()).getLocalUri() != null || !chatList.get(holder.getAdapterPosition()).getLocalUri().equals("")) {
+                                    DialogBox showImage = new DialogBox(context);
+                                    showImage.ShowImage(chatList.get(holder.getAdapterPosition()).getLocalUri(), chatList.get(holder.getAdapterPosition()).getMsg_id());
+                                } else {
+                                    // showToastForContentNotAvailable();
+                                }
                             } else {
-                               // showToastForContentNotAvailable();
+                                Toast.makeText(context, "no file found", Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             //showToastForContentNotAvailable();
@@ -259,6 +428,7 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
         private TextView smsTxt;
         TextView date, username, number, contactName;
         ImageView image, downloadImage, playImage, pauseImage, msgStatus;
+        CircleImageView profileImage;
         LinearLayout layout;
         ProgressBar progressBar;
         SeekBar seekBar;
@@ -269,6 +439,7 @@ public class MessagingAdapter extends RecyclerView.Adapter<MessagingAdapter.List
 
             smsTxt = (TextView) itemView.findViewById(R.id.msgtxt_id);
             msgStatus = (ImageView) itemView.findViewById(R.id.user_reply_status);
+            profileImage = (CircleImageView) itemView.findViewById(R.id.imv_ProfileImage);
 //            number = (TextView) itemView.findViewById(R.id.number);
 //            invite = (TextView) itemView.findViewById(R.id.invite);
 //            addContact = (TextView) itemView.findViewById(R.id.addContact);

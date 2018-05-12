@@ -30,6 +30,7 @@ public class FeedMoreDetails extends BaseActivity implements View.OnClickListene
     private DatabaseReference dbToMyNode;
     private User_Details myDetails = new User_Details();
     private Button save;
+    private EditText edtAboutMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class FeedMoreDetails extends BaseActivity implements View.OnClickListene
 
         dbToMyNode = FirebaseDatabase.getInstance().getReference().child(Constants.USERS_Details_NODE).child(myDetails.getKey());
         save = (Button) findViewById(R.id.btn_save);
+        edtAboutMe = (EditText) findViewById(R.id.edt_aboutMe);
         dynamicWorkLayout = (LinearLayout) findViewById(R.id.dynamicWorkLayout);
         dynamicEducationLayout = (LinearLayout) findViewById(R.id.dynamicEducationLayout);
         addwork = (TextView) findViewById(R.id.imv_addWork);
@@ -52,8 +54,7 @@ public class FeedMoreDetails extends BaseActivity implements View.OnClickListene
             for (User_Details.Work work : myDetails.getWork()) {
                 addWorkLayout(work);
             }
-        }
-        else {
+        } else {
             addWorkLayout(null);
         }
         if (myDetails.getEducation() != null) {
@@ -61,8 +62,7 @@ public class FeedMoreDetails extends BaseActivity implements View.OnClickListene
 
                 addEducationLayout(education);
             }
-        }
-        else {
+        } else {
             addEducationLayout(null);
         }
     }
@@ -149,8 +149,12 @@ public class FeedMoreDetails extends BaseActivity implements View.OnClickListene
             }
 
         }
+        String aboutMe;
 
         Map<String, Object> childUpdate = new HashMap<>();
+        if (!edtAboutMe.getText().toString().isEmpty()) {
+            childUpdate.put("about", edtAboutMe.getText().toString());
+        }
         childUpdate.put("education", myEdu);
         childUpdate.put("work", myWork);
         dbToMyNode.updateChildren(childUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {

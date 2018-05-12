@@ -5,73 +5,90 @@
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_gravity="left"
-    android:layout_margin="5dp"
+    android:layout_marginTop="2dp"
     android:gravity="left">
 
-    <LinearLayout
-        android:id="@+id/outgoing_layout_bubble"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imv_ProfileImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="80dp"
-        android:background="@drawable/balloon_incoming_normal"
-        android:orientation="vertical"
-        android:padding="10dp">
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        android:layout_margin="5dp"
+        android:background="@drawable/circular"
+        android:src="@drawable/person" />
 
-    <ImageView
-        android:id="@+id/image_full_view"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/image_logo" />
-
-        <ImageView
-            android:id="@+id/downloadImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="center"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_file_download_black_24dp" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar_show_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/user_name"
-        style="@style/chat_timings"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="2dp"
-        android:padding="2dp" />
+        android:layout_marginRight="80dp"
+        android:layout_toRightOf="@id/imv_ProfileImage"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
+
+        <LinearLayout
+            android:id="@+id/outgoing_layout_bubble"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+
+            android:orientation="vertical"
+            android:padding="2dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/image_full_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/image_logo" />
+
+                <ImageView
+                    android:id="@+id/downloadImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_file_download_black_24dp" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_show_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/user_name"
+                    style="@style/chat_timings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|right"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="2dp"
+                    android:padding="2dp" />
 
 
-    <TextView
-        android:id="@+id/date_id"
-        style="@style/chat_timings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:padding="2dp" />
-    </FrameLayout>
+                <TextView
+                    android:id="@+id/date_id"
+                    style="@style/chat_timings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="2dp" />
+            </FrameLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
 

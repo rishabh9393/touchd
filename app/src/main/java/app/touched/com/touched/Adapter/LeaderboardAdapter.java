@@ -1,6 +1,7 @@
 package app.touched.com.touched.Adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import app.touched.com.touched.Activites.ProfileActivity;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
+
+import static app.touched.com.touched.Utilities.Constants.USERS_Details_NODE;
 
 /**
  * Created by AnshulMajoka on 18-Mar-18.
@@ -59,11 +65,21 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        User_Details user_details = this.user_details.get(position);
+        final User_Details user_details = this.user_details.get(position);
         switch (getItemViewType(position)) {
             case ITEM:
-                LeaderboardAdapter.Users_ViewHolder viewHolder = (LeaderboardAdapter.Users_ViewHolder) holder;
-               Picasso.with(activity).load(user_details.getPicture().getData().getUrl()).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
+                final LeaderboardAdapter.Users_ViewHolder viewHolder = (LeaderboardAdapter.Users_ViewHolder) holder;
+                Picasso.with(activity).load(user_details.getPicture().getData().getUrl()).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(activity).load(user_details.getPicture().getData().getUrl()).placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).into(viewHolder.userImage);
+                    }
+                });
                 viewHolder.userName.setText(user_details.getFirst_name() + " " + user_details.getLast_name());
                 String rating = user_details.getRanking();
                 if (rating != null)
@@ -165,6 +181,14 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             location = (TextView) view.findViewById(R.id.txt_Place);
             userRating = (TextView) view.findViewById(R.id.txt_Rank);
             userImage = (ImageView) view.findViewById(R.id.imv_Profile);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent data = new Intent(v.getContext(), ProfileActivity.class);
+                    data.putExtra(USERS_Details_NODE, user_details.get(getAdapterPosition()));
+                    v.getContext().startActivity(data);
+                }
+            });
         }
     }
 

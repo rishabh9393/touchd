@@ -5,7 +5,7 @@
     android:id="@+id/chat_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@null"
+    android:background="@color/grey_color"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -22,6 +22,24 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/imv_back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:foregroundGravity=""
+                android:src="@drawable/back_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/imv_back"
+                android:text="Back"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/civ_profile"
                 android:layout_width="40dp"
@@ -30,14 +48,15 @@
 
                 android:padding="20dp"
                 android:src="@drawable/contact_ic"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/llyDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
                 android:layout_toRightOf="@id/civ_profile"
-                android:layout_marginLeft="10dp"
                 android:orientation="vertical"
                 android:padding="5dp">
 
@@ -48,6 +67,7 @@
                     android:layout_gravity="top"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:text="@string/app_name"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
@@ -253,6 +273,7 @@
 
         </FrameLayout>
 
+
         <TextView
             android:id="@+id/currentdate"
             android:layout_width="wrap_content"
@@ -262,6 +283,13 @@
             android:textSize="15sp"
             android:visibility="gone" />
         <!--android:background="@drawable/shape"-->
+        <include
+            layout="@layout/poke_layout"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/gift_receive_layout"
+            android:visibility="gone" />
     </FrameLayout>
 
 

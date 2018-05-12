@@ -38,6 +38,11 @@ public class Utility {
 
     }
 
+    public static String splitPath(String path) {
+    return    path.substring(path.lastIndexOf("/")+1);
+
+    }
+
     public static void showToastForContentNotAvailable(Context con) {
         Toast.makeText(con, "Sorry! this content is not available or you may deleted this file from phone folder", Toast.LENGTH_SHORT).show();
     }

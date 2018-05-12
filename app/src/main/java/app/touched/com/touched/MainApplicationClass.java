@@ -2,6 +2,7 @@ package app.touched.com.touched;
 
 import android.app.Application;
 import android.content.ComponentCallbacks2;
+import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.AccessToken;
@@ -83,7 +84,8 @@ public class MainApplicationClass extends Application {
     public void onCreate() {
         super.onCreate();
         FirebaseApp.initializeApp(this);
-
+        StrictMode.VmPolicy.Builder builderVm = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builderVm.build());
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         storage = FirebaseStorage.getInstance();
@@ -95,8 +97,6 @@ public class MainApplicationClass extends Application {
 
         builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
         Picasso built = builder.build();
-        built.setIndicatorsEnabled(true);
-        built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
 
     }

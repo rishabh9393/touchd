@@ -87,16 +87,16 @@ public class DialogBox {
 
             Picasso.with(dialog.getContext()).load(Uri.parse(image)).networkPolicy(NetworkPolicy.OFFLINE).into(imageFullview);
 
-            String rootDir = Environment.getExternalStorageDirectory()
-                    + File.separator + "touchd";
-            File file = new File(rootDir,id);
-            if(file.exists())
-            {
-                // hide download button
-            }
-            else {
-                //download image enabled
-            }
+//            String rootDir = Environment.getExternalStorageDirectory()
+//                    + File.separator + "touchd";
+//            File file = new File(rootDir,id);
+//            if(file.exists())
+//            {
+//                // hide download button
+//            }
+//            else {
+//                //download image enabled
+//            }
             dialog.show();
         }
         return accept;

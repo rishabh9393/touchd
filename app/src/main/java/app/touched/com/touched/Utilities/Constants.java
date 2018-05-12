@@ -13,7 +13,7 @@ public class Constants {
     public static final String USERS_Details_NODE = "user_details";
     public static final String IS_LOGIN_NODE = "is_login";
     public static final String LAST_ONLINE_TIME_NODE = "last_online_time";
-    public static final String USER_LAST_ONLINE_TIME_NODE = "last_online_time";
+    public static final String USER_LAST_LOGIN_TIME_NODE = "last_online_time";
     public static final String MSG_COUNT_NODE = "msg_count";
     public static final String EXPLORE_FRAGMENT = "exploreFragment";
     public static final String LEADERBOARD_FRAGMENT = "leaderboardFragment";
@@ -32,6 +32,7 @@ public class Constants {
     public static final String IS_DELIVERED_TAG ="isDelivered";
     public static final int CAPTURE_IMAGE_REQ_CODE = 100;
     public static final int GALLERY_IMAGE_REQ_CODE = 101;
+    public static final String POKE_GIFT_MSG_NODE = "poke_gift_messages";
 
 
     public static final int MY_MESSAGE = 0, OTHER_MESSAGE = 1, MY_IMAGE_MSG = 2, OTHER_IMAGE_MSG = 3;

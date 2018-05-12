@@ -46,7 +46,7 @@ public class TimeUtils {
         int min;
         String minute;
         try {
-            _date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss Z").parse(date);
+            _date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS'Z'").parse(date);
             min = _date.getMinutes();
             if (min <= 9) {
                 minute = "0" + Long.toString(_date.getMinutes());

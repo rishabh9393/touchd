@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -36,8 +38,18 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Users_Vi
     }
 
     @Override
-    public void onBindViewHolder(GalleryAdapter.Users_ViewHolder holder, int position) {
-        Picasso.with(context).load(fb_photos.get(position).getData().getPicture()).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(holder.image);
+    public void onBindViewHolder(final GalleryAdapter.Users_ViewHolder holder, final int position) {
+        Picasso.with(context).load(fb_photos.get(position).getData().getPicture()).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(holder.image, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+                Picasso.with(context).load(fb_photos.get(position).getData().getPicture()).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(holder.image);
+            }
+        });
     }
 
     @Override

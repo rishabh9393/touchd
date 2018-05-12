@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -35,6 +38,7 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.Users_
     @Override
     public void onBindViewHolder(Users_ViewHolder holder, int position) {
         holder.interestName.setText(data.get(position).getName());
+        Picasso.with(con).load(data.get(position).getPicture().getData().getUrl()).into(holder.interestImage);
     }
 
     @Override
@@ -44,10 +48,12 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.Users_
 
     public class Users_ViewHolder extends RecyclerView.ViewHolder {
         TextView interestName;
+        ImageView interestImage;
 
         public Users_ViewHolder(View itemView) {
             super(itemView);
             interestName = (TextView) itemView.findViewById(R.id.txvName);
+            interestImage = (ImageView) itemView.findViewById(R.id.likesImage);
         }
     }
 }

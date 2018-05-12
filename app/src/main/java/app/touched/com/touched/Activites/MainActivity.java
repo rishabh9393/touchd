@@ -31,19 +31,29 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import app.touched.com.touched.Adapter.DemoViewPagerAdapter;
 import app.touched.com.touched.Fragments.DemoFragment;
 import app.touched.com.touched.HomePage;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.User_Details;
+import app.touched.com.touched.Models.Users;
 import app.touched.com.touched.R;
 import app.touched.com.touched.Utilities.Constants;
+import app.touched.com.touched.Utilities.TimeUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static app.touched.com.touched.Utilities.Constants.IS_LOGIN_NODE;
+import static app.touched.com.touched.Utilities.Constants.LAST_ONLINE_TIME_NODE;
+import static app.touched.com.touched.Utilities.Constants.USERS_NODE;
 
 
 public class MainActivity extends BaseActivity {
@@ -65,9 +75,13 @@ public class MainActivity extends BaseActivity {
     private User_Details myDetails = new User_Details();
     public static int navItemIndex = 0;
     View navHeader;
+    private DatabaseReference dbUsers;
 
     // private boolean useMenuResource = true;
     // private int[] tabColors;
+    public FirebaseUser myBasicDetails;
+    public FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +91,14 @@ public class MainActivity extends BaseActivity {
 //        setTheme(enabledTranslucentNavigation ? R.style.AppTheme_TranslucentNavigation : R.style.AppTheme);
 
         setContentView(R.layout.activity_main);
+        mAuth = ((MainApplicationClass) getApplication()).getmAuth();
+        myBasicDetails = ((MainApplicationClass) getApplication()).getMyDetails();
+
         //  Toast.makeText(this, "welcome " + myBasicDetails.getDisplayName(), Toast.LENGTH_SHORT).show();
         myDetails = ((MainApplicationClass) getApplication()).getProfileUsersDetail();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        dbUsers = FirebaseDatabase.getInstance().getReference();
 
         setUpToolbar();
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -89,10 +107,16 @@ public class MainActivity extends BaseActivity {
         navHeader = mNavigationView.getHeaderView(0);
         profileImage = (CircleImageView) navHeader.findViewById(R.id.imv_Profile);
         userName = (TextView) navHeader.findViewById(R.id.txvName);
+
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
 
         setUpNavDrawer();
-
+        User_Details users = new User_Details();
+        users.setIs_login("true");
+        Map<String, Object> childUpdate = new HashMap<>();
+        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + myBasicDetails.getUid() + "/" + IS_LOGIN_NODE, users.getIs_login());
+        childUpdate.put("/" + USERS_NODE + "/" + myBasicDetails.getUid() + "/" + IS_LOGIN_NODE, users.getIs_login());
+        dbUsers.updateChildren(childUpdate);
 // Create items
 //        if (useMenuResource) {
 //            tabColors = getApplicationContext().getResources().getIntArray(R.array.tab_colors);
@@ -119,6 +143,8 @@ public class MainActivity extends BaseActivity {
         bottomNavigation.setColored(true);
         bottomNavigation.setBackgroundColor(Color.BLACK);
         bottomNavigation.setDefaultBackgroundColor(Color.BLACK);
+        bottomNavigation.setBehaviorTranslationEnabled(false);
+
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -319,7 +345,8 @@ public class MainActivity extends BaseActivity {
 //    }
 
     private void setUpNavDrawer() {
-        Picasso.with(this).load(myDetails.getPicture().getData().getUrl()).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
+        Picasso.with(MainActivity.this).load(myDetails.getPicture().getData().getUrl()).placeholder(R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
+
         userName.setText(myDetails.getFirst_name() + " " + myDetails.getLast_name());
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.openDrawer, R.string.closeDrawer) {
 
@@ -359,6 +386,18 @@ public class MainActivity extends BaseActivity {
             mDrawerLayout.closeDrawers();
             return;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Map<String, Object> childUpdate = new HashMap<>();
+        childUpdate.put("/" + USERS_NODE + "/" + myBasicDetails.getUid() + "/" + IS_LOGIN_NODE, "false");
+
+        childUpdate.put("/" + Constants.USERS_Details_NODE + "/" + myBasicDetails.getUid() + "/" + IS_LOGIN_NODE, "false");
+        childUpdate.put("/" + Constants.USERS_NODE + "/" + myBasicDetails.getUid() + "/" + LAST_ONLINE_TIME_NODE, TimeUtils.getCurrentDateTime());
+        dbUsers.updateChildren(childUpdate);
     }
 }
 

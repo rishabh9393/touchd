@@ -4,15 +4,15 @@
         <item
             android:id="@+id/navigation_home"
             android:checked="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/home_icon"
             android:title="Home" />
         <item
             android:id="@+id/navigation_gift"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/my_gift_card"
             android:title="Gifts" />
         <item
             android:id="@+id/navigation_credits"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/loyalty_points"
             android:title="Credits" />
         <item
             android:id="@+id/navigation_work"
@@ -20,7 +20,7 @@
             android:title="How it works" />
         <item
             android:id="@+id/navigation_signout"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/logout_popup"
             android:title="Sign out" />
     </group>
 

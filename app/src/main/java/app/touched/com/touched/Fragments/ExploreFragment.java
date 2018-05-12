@@ -130,6 +130,8 @@ public class ExploreFragment extends Fragment {
         getCityWiseData();
     }
 
+
+
     /***
      * get the data from Firebase on the location basis
      */
@@ -230,7 +232,7 @@ public class ExploreFragment extends Fragment {
                     } else {
                         dbToCollectExploreData.removeEventListener(userDetailsListner);
 
-                        mAdapter.filterByEducation(full_user_details, myDetails.getEducation().get(0).getSchool().getName());
+                        mAdapter.filterByEducation(full_user_details, myDetails.getEducation());
                     }
                     break;
                 case "Same Workplace":
@@ -240,7 +242,7 @@ public class ExploreFragment extends Fragment {
                     } else {
                         dbToCollectExploreData.removeEventListener(userDetailsListner);
 
-                        mAdapter.filterByWork(full_user_details, myDetails.getWork().get(0).getDescription());
+                        mAdapter.filterByWork(full_user_details, myDetails.getWork());
                     }
                     break;
             }
@@ -259,11 +261,13 @@ public class ExploreFragment extends Fragment {
 
             for (DataSnapshot value : dataSnapshot.getChildren()) {
                 lastKey = value.getKey();
-                if (!lastKey.equals(currentFUser.getUid())) {// later on change this fire id with user id
+                if (!lastKey.equals(myDetails.getKey())) {// later on change this fire id with user id
                     User_Details exploreUsersDetail = value.getValue(User_Details.class);
-                    if (full_user_details.contains(exploreUsersDetail))
-                        full_user_details.remove(exploreUsersDetail);
-                    full_user_details.add(exploreUsersDetail);
+                    if(exploreUsersDetail.getKey()!=null) {
+                        if (full_user_details.contains(exploreUsersDetail))
+                            full_user_details.remove(exploreUsersDetail);
+                        full_user_details.add(exploreUsersDetail);
+                    }
                 } else {
                     totalData -= 1;
                 }
