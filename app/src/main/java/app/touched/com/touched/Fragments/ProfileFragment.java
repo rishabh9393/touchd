@@ -45,6 +45,7 @@ import app.touched.com.touched.Activites.MessagingActivity;
 import app.touched.com.touched.Adapter.InterestAdapter;
 import app.touched.com.touched.MainApplicationClass;
 import app.touched.com.touched.Models.MessageModel;
+import app.touched.com.touched.Models.MessageSentModel;
 import app.touched.com.touched.Models.MessagingType;
 import app.touched.com.touched.Models.User_Details;
 import app.touched.com.touched.R;
@@ -75,7 +76,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     Bundle data;
     ImageView imvMaleMsg, imvFemaleMsg, imvMalePoke, imvFemaleGift;
     FrameLayout frameContainer;
-    private DatabaseReference dbToRootNode, dbToMyPGNode, dbToMyTimelineNode, dbToFriendTimelineNode, dbToMyNode, dbToFriendNode, dbToFriendStatus;
+    private DatabaseReference dbToRootNode, dbToMyPGNode,dbToFriendPGNode, dbToMyTimelineNode, dbToFriendTimelineNode, dbToMyNode, dbToFriendNode, dbToFriendStatus;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -155,7 +156,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 myDetails = ((MainApplicationClass) getActivity().getApplication()).getProfileUsersDetail();
 
                 dbToRootNode = FirebaseDatabase.getInstance().getReference();
-                dbToMyPGNode = dbToRootNode.child(POKE_GIFT_MSG_NODE).child(myDetails.getKey()).child(profileUsersDetail.getKey());
+                dbToMyPGNode = dbToRootNode.child(POKE_GIFT_MSG_NODE).child(profileUsersDetail.getKey()).child(myDetails.getKey());
+                dbToFriendPGNode = dbToRootNode.child(POKE_GIFT_MSG_NODE).child(myDetails.getKey()).child(profileUsersDetail.getKey());
 
                 dbToMyPGNode.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -251,22 +253,50 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private void sendPokeToMaleUser() {
         imvMalePoke.setVisibility(View.GONE);
-        MessageModel myPoke = new MessageModel();
+        // update friends timeline
+        final MessageSentModel myPoke = new MessageSentModel();
         myPoke.setMetaType(MessagingType.POKE.toString());
-        myPoke.setName(Utility.getFullName(myDetails));
+        myPoke.setMsg_content("you poked");
         myPoke.setSenderEmail(myDetails.getEmail());
         myPoke.setSentTime(TimeUtils.getCurrentDateTime());
-        final MessageModel myModel = myPoke;
+myPoke.setIsMetaData("false");
+        myPoke.setEmail(profileUsersDetail.getEmail());
+        myPoke.setFirst_name(profileUsersDetail.getFirst_name());
+        myPoke.setLast_name(profileUsersDetail.getLast_name());
+        myPoke.setId(profileUsersDetail.getId());
+        myPoke.setKey(profileUsersDetail.getKey());
+        myPoke.setPicture(profileUsersDetail.getPicture());
+        myPoke.setSenderEmail(myDetails.getEmail());
+        myPoke.setTimestamp(TimeUtils.getCurrentDateTime());
+        myPoke.setIsMessagesUnread("false");
+
+        final MessageSentModel frndPoke = new MessageSentModel();
+        frndPoke.setMetaType(MessagingType.POKE.toString());
+        frndPoke.setMsg_content("she poke you");
+        frndPoke.setSenderEmail(myDetails.getEmail());
+        frndPoke.setSentTime(TimeUtils.getCurrentDateTime());
+        frndPoke.setIsMetaData("false");
+        frndPoke.setEmail(myDetails.getEmail());
+        frndPoke.setFirst_name(myDetails.getFirst_name());
+        frndPoke.setLast_name(myDetails.getLast_name());
+        frndPoke.setId(myDetails.getId());
+        frndPoke.setKey(myDetails.getKey());
+        frndPoke.setPicture(myDetails.getPicture());
+        frndPoke.setSenderEmail(myDetails.getEmail());
+        frndPoke.setTimestamp(TimeUtils.getCurrentDateTime());
+        frndPoke.setIsMessagesUnread("false");
+
+
         dbToMyPGNode.setValue(myPoke).addOnSuccessListener(new OnSuccessListener<Void>() {
 
             @Override
             public void onSuccess(Void aVoid) {
                 // update users any my timeline to showing the poke msg
                 Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put(getString(R.string.MYMESSAGESTAG) + "/" + profileUsersDetail.getKey() + "/" + myDetails.getKey(), myModel);
-                childUpdates.put(getString(R.string.MYMESSAGESTAG) + "/" + myDetails.getKey() + "/" + profileUsersDetail.getKey(), myModel);
+                childUpdates.put(getString(R.string.MYMESSAGESTAG) + "/" + profileUsersDetail.getKey() + "/" + myDetails.getKey(), frndPoke);
+                childUpdates.put(getString(R.string.MYMESSAGESTAG) + "/" + myDetails.getKey() + "/" + profileUsersDetail.getKey(), myPoke);
                 dbToRootNode.updateChildren(childUpdates);
-                Toast.makeText(getContext(), "You have poke to " + myModel.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "You have poke to " + profileUsersDetail.getFirst_name(), Toast.LENGTH_SHORT).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {

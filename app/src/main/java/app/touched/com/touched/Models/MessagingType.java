@@ -8,5 +8,12 @@ public enum MessagingType {
     TEXT,
     IMAGE,
     POKE,
-    GIFTS
+    GIFTS,
+    GIFT1,
+    GIFT2,
+    GIFT3,
+    GIFT4
+
+
+
 }

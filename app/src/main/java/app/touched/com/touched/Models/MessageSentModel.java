@@ -17,6 +17,33 @@ public class MessageSentModel implements Parcelable {
     private String msg_count;
     private String senderEmail, timestamp, isRead, isDelivered, deliveredTime, readTime, isSent, SentTime, isMetaData, metaType, msg_content;
     private String isMessagesUnread;
+    private String isRejected;
+    private String timeToExpire;
+    private String giftType;
+
+    public String getGiftType() {
+        return giftType;
+    }
+
+    public void setGiftType(String giftType) {
+        this.giftType = giftType;
+    }
+
+    public String getIsRejected() {
+        return isRejected;
+    }
+
+    public void setIsRejected(String isRejected) {
+        this.isRejected = isRejected;
+    }
+
+    public String getTimeToExpire() {
+        return timeToExpire;
+    }
+
+    public void setTimeToExpire(String timeToExpire) {
+        this.timeToExpire = timeToExpire;
+    }
 
     public String getIsMessagesUnread() {
         return isMessagesUnread;

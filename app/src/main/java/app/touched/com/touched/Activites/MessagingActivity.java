@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -64,6 +65,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static app.touched.com.touched.Utilities.Constants.CAPTURE_IMAGE_REQ_CODE;
 import static app.touched.com.touched.Utilities.Constants.FRIENDS_TAG;
 import static app.touched.com.touched.Utilities.Constants.GALLERY_IMAGE_REQ_CODE;
+import static app.touched.com.touched.Utilities.Constants.MALE;
 import static app.touched.com.touched.Utilities.Constants.META_NO;
 import static app.touched.com.touched.Utilities.Constants.MSG_COUNT_NODE;
 import static app.touched.com.touched.Utilities.Constants.MSG_NODE;
@@ -74,12 +76,12 @@ import static app.touched.com.touched.Utilities.TimeUtils.getUniqueTime;
 
 public class MessagingActivity extends BaseActivity implements View.OnClickListener, IMessaging, DownloadCallback {
     ImageButton imvGallery, imvCamera, imvGift1, imvGift2, imvGift3, imvGift4, imvCamera2, imvSendSms;
-    TextView userName, userStatus;
+    TextView userName, userStatus,txv_waitingGift;
     FrameLayout fl_attachment;
     EditText edt_sendSms;
     RecyclerView rcv_chat;
     private LinearLayout lly_bottomChatLayout, lly_pokeLayout, lly_giftRcvLayout;
-    private DatabaseReference dbToRootNode, dbToMyNode, dbToFriendNode, dbToFriendStatus, dbToMyPGNode;
+    private DatabaseReference dbToRootNode, dbToMyNode, dbToFriendNode, dbToFriendStatus, dbToMyPGNode,dbToMyFriendPGNode;
     User_Details myDetails = new User_Details();
     User_Details myFriend = new User_Details();
     private FirebaseAuth mAuth;
@@ -95,7 +97,8 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
     private Uri photoURI;
     private ImageView imvBack;
     private Boolean isActiveUser = false;
-
+    private Button btn_sendGift, btn_acceptGift, btn_declineGift;
+    MessageSentModel myPGResponse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,16 +132,23 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
         userImage = (CircleImageView) findViewById(R.id.civ_profile);
         userName = (TextView) findViewById(R.id.txvUserName);
         userStatus = (TextView) findViewById(R.id.txvUserStatus);
+        txv_waitingGift=(TextView)findViewById(R.id.txv_giftWaiting);
         imvBack = (ImageView) findViewById(R.id.imv_back);
         lly_bottomChatLayout = (LinearLayout) findViewById(R.id.bottomlayout);
         lly_pokeLayout = (LinearLayout) findViewById(R.id.lly_pokeLayout);
         lly_giftRcvLayout = (LinearLayout) findViewById(R.id.lly_giftRecieveLayout);
-
+        btn_sendGift = (Button) findViewById(R.id.btn_sendGift);
+        btn_acceptGift=(Button)findViewById(R.id.btn_acceptGift);
+        btn_declineGift=(Button)findViewById(R.id.btn_declineGift);
+        btn_acceptGift.setOnClickListener(this);
+        btn_declineGift.setOnClickListener(this);
+        btn_sendGift.setOnClickListener(this);
         imvSendSms.setOnClickListener(this);
         imvGallery.setOnClickListener(this);
         imvCamera.setOnClickListener(this);
         imvCamera.setOnClickListener(this);
         imvCamera2.setOnClickListener(this);
+        imvGift1.setOnClickListener(this);
     }
 
     private void intitalizeObjects() {
@@ -150,25 +160,51 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
         myFriend = getIntent().getExtras().getParcelable(FRIENDS_TAG);
         dbToMyNode = dbToRootNode.child(MSG_NODE).child(myDetails.getKey()).child(myFriend.getKey());
         dbToFriendNode = dbToRootNode.child(MSG_NODE).child(myFriend.getKey()).child(myDetails.getKey());
+        if(myDetails.getGender().toLowerCase().equals(MALE)){
+            lly_bottomChatLayout.setVisibility(View.GONE);
+        }
+        else {
+            lly_bottomChatLayout.setVisibility(View.VISIBLE);
+        }
         // Node to check either you have any poke or Gift
         // if you have poke you need to send gift
         // if you have gift you need to accept and chat with user on conditions
         dbToMyPGNode = dbToRootNode.child(POKE_GIFT_MSG_NODE).child(myDetails.getKey()).child(myFriend.getKey());
-        dbToMyPGNode.addListenerForSingleValueEvent(new ValueEventListener() {
+        dbToMyFriendPGNode=dbToRootNode.child(POKE_GIFT_MSG_NODE).child(myFriend.getKey()).child(myDetails.getKey());
+        dbToMyPGNode.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() > 0) {
-
-                    MessageModel myPGResponse = dataSnapshot.getValue(MessageModel.class);
+                if (dataSnapshot.getValue()!=null) {
+                    imvCamera.setVisibility(View.GONE);
+                    imvGallery.setVisibility(View.GONE);
+                     myPGResponse = dataSnapshot.getValue(MessageSentModel.class);
                     if (myPGResponse.getMetaType().equals(MessagingType.POKE.toString())) {
                         lly_pokeLayout.setVisibility(View.VISIBLE);
+
                     } else if (myPGResponse.getMetaType().equals(MessagingType.GIFTS.toString())) {
                         lly_giftRcvLayout.setVisibility(View.VISIBLE);
+                        lly_bottomChatLayout.setVisibility(View.GONE);
+                    }
+                    else if(myPGResponse.getMetaType().equals(MessageStatus.GIFT_WAIT_RESPONSE.toString()))
+                    {
+                        txv_waitingGift.setVisibility(View.VISIBLE);
+                    }
+                    else if(myPGResponse.getMetaType().equals(MessageStatus.ACCEPT.toString()))
+                    {
+                        txv_waitingGift.setVisibility(View.GONE);
+                        lly_bottomChatLayout.setVisibility(View.VISIBLE);
+                    }
+                    else if(myPGResponse.getMetaType().equals(MessageStatus.REJECT))
+                    {
+                        txv_waitingGift.setVisibility(View.VISIBLE);
+                        txv_waitingGift.setText("Sorry your Gift Rejected, You can not chat with this person");
                     }
 
                 } else {
-
+                    imvCamera.setVisibility(View.GONE);
+                    imvGallery.setVisibility(View.GONE);
                 }
+
             }
 
             @Override
@@ -201,6 +237,8 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
             dbToFriendNode.addChildEventListener(friendMsgCallback);
             dbToMyNode.keepSynced(true);
             dbToFriendNode.keepSynced(true);
+            imvCamera.setVisibility(View.VISIBLE);
+            imvGallery.setVisibility(View.VISIBLE);
         } else {
             lly_bottomChatLayout.setVisibility(View.GONE);
         }
@@ -412,6 +450,80 @@ public class MessagingActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.imv_back:
                 onBackPressed();
+                break;
+
+            case R.id.btn_sendGift:
+                fl_attachment.setVisibility(View.VISIBLE);
+                lly_pokeLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.imv_gift1:
+                //dbToMyPGNode.removeValue();
+                fl_attachment.setVisibility(View.GONE);
+                MessageSentModel myGift = new MessageSentModel();
+                myGift.setMetaType(MessagingType.GIFTS.toString());
+                myGift.setSenderEmail(myDetails.getEmail());
+                myGift.setSentTime(TimeUtils.getCurrentDateTime());
+                myGift.setGiftType(MessagingType.GIFT1.toString());
+                myGift.setEmail(myDetails.getEmail());
+                myGift.setFirst_name(myDetails.getFirst_name());
+                myGift.setLast_name(myDetails.getLast_name());
+                myGift.setId(myDetails.getId());
+                myGift.setIsMetaData("false");
+                myGift.setKey(myDetails.getKey());
+                myGift.setPicture(myDetails.getPicture());
+                myGift.setSenderEmail(myDetails.getEmail());
+                myGift.setTimestamp(TimeUtils.getCurrentDateTime());
+                myGift.setIsMessagesUnread("false");
+                dbToMyFriendPGNode.setValue(myGift);
+                dbToMyPGNode.child("metaType").setValue(MessageStatus.GIFT_WAIT_RESPONSE.toString());
+                Toast.makeText(this,"Great, You have purchased the Gift and successfully sent to your love",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.btn_acceptGift:
+                lly_giftRcvLayout.setVisibility(View.GONE);
+                MessageSentModel myGiftAccept = new MessageSentModel();
+                myGiftAccept.setMetaType(MessageStatus.ACCEPT.toString());
+                myGiftAccept.setSenderEmail(myDetails.getEmail());
+                myGiftAccept.setSentTime(TimeUtils.getCurrentDateTime());
+                myGiftAccept.setGiftType(myPGResponse.getGiftType());
+                myGiftAccept.setEmail(myDetails.getEmail());
+                myGiftAccept.setFirst_name(myDetails.getFirst_name());
+                myGiftAccept.setLast_name(myDetails.getLast_name());
+                myGiftAccept.setId(myDetails.getId());
+                myGiftAccept.setKey(myDetails.getKey());
+                myGiftAccept.setPicture(myDetails.getPicture());
+                myGiftAccept.setSenderEmail(myDetails.getEmail());
+                myGiftAccept.setTimestamp(TimeUtils.getCurrentDateTime());
+                myGiftAccept.setIsMessagesUnread("false");
+                myGiftAccept.setIsMetaData("false");
+                dbToMyFriendPGNode.setValue(myGiftAccept);
+                lly_giftRcvLayout.setVisibility(View.GONE);
+                lly_bottomChatLayout.setVisibility(View.VISIBLE);
+                Toast.makeText(this,"Great, You have Accept the Gift. Points will we added soon to your wallet",Toast.LENGTH_LONG).show();
+
+                break;
+            case R.id.btn_declineGift:
+                lly_giftRcvLayout.setVisibility(View.GONE);
+                MessageSentModel myGiftReject = new MessageSentModel();
+                myGiftReject.setMetaType(MessageStatus.REJECT.toString());
+                myGiftReject.setSenderEmail(myDetails.getEmail());
+                myGiftReject.setSentTime(TimeUtils.getCurrentDateTime());
+                myGiftReject.setGiftType(myPGResponse.getGiftType());
+                myGiftReject.setEmail(myDetails.getEmail());
+                myGiftReject.setFirst_name(myDetails.getFirst_name());
+                myGiftReject.setLast_name(myDetails.getLast_name());
+                myGiftReject.setId(myDetails.getId());
+                myGiftReject.setKey(myDetails.getKey());
+                myGiftReject.setPicture(myDetails.getPicture());
+                myGiftReject.setSenderEmail(myDetails.getEmail());
+                myGiftReject.setTimestamp(TimeUtils.getCurrentDateTime());
+                myGiftReject.setIsMessagesUnread("false");
+                myGiftReject.setIsMetaData("false");
+
+                dbToMyFriendPGNode.setValue(myGiftReject);
+                lly_giftRcvLayout.setVisibility(View.GONE);
+                lly_bottomChatLayout.setVisibility(View.VISIBLE);
+                Toast.makeText(this,"OH-HO, You have Rejected the Gifts and Points, but don't worry you can start chat by replying first and earn Points",Toast.LENGTH_LONG).show();
+
                 break;
             default:
                 fl_attachment.setVisibility(View.GONE);

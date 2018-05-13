@@ -290,6 +290,16 @@
         <include
             layout="@layout/gift_receive_layout"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txv_giftWaiting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="UH-OH we are still waiting for Your girl to Accept your love Gift"
+            android:textColor="@color/colorPrimaryDark"
+            android:visibility="gone"/>
     </FrameLayout>
 
 

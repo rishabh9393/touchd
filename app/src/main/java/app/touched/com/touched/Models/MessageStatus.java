@@ -9,5 +9,8 @@ public enum MessageStatus {
     FAIL,
     PROGRESS,
     DOWNLOADED,
-    REMOVED
+    REMOVED,
+    GIFT_WAIT_RESPONSE,
+    ACCEPT,
+    REJECT
 }

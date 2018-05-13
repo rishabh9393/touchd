@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/lly_giftRecieveLayout"
     android:orientation="vertical"
     android:paddingBottom="20dp">
 
     <LinearLayout
-        android:id="@+id/lly_giftRecieveLayout"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_layout"
@@ -16,25 +17,26 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center"
             android:src="@drawable/gift1" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+android:gravity="center"
             android:orientation="vertical"
             android:padding="10dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="I have sent you a gift"
                 android:textColor="@color/colorPrimaryDark" />
 
             <TextView
                 android:id="@+id/txv_giftType"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Wine and Cheese"
@@ -44,12 +46,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:gravity="center"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/donought" />
 
                 <TextView
@@ -75,10 +78,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
+            android:layout_marginRight="5dp"
             android:gravity="center"
-            android:text="2 Days
-Remaining"
+            android:text="2 Days Remaining"
 
             android:textSize="15sp" />
     </LinearLayout>

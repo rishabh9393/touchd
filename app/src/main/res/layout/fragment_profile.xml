@@ -15,6 +15,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
@@ -26,7 +27,7 @@
                 android:id="@+id/frame_container"
                 android:layout_width="match_parent"
                 android:layout_height="250dp" />
-            <!--<ImageView-->`
+            <!--<ImageView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:src="@drawable/com_facebook_profile_picture_blank_square" />-->
@@ -100,7 +101,7 @@
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/imvMaleMsg"
@@ -126,7 +127,7 @@
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/imvFemaleMsg"
@@ -291,9 +292,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@null"
                 android:clickable="false"
                 android:focusable="false"

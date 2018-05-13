@@ -18,24 +18,6 @@ public class MessageModel {
     private String meta_no, localUri, msg_id, name, senderEmail, timestamp, isRead, isDelivered, deliveredTime, readTime, isSent, SentTime, isMetaData, metaType, msgContent;
     private boolean isMine;
     private String thumbImage;
-    private String isRejected;
-    private String timeToExpire;
-
-    public String getIsRejected() {
-        return isRejected;
-    }
-
-    public void setIsRejected(String isRejected) {
-        this.isRejected = isRejected;
-    }
-
-    public String getTimeToExpire() {
-        return timeToExpire;
-    }
-
-    public void setTimeToExpire(String timeToExpire) {
-        this.timeToExpire = timeToExpire;
-    }
 
     public MessageModel() {
 
